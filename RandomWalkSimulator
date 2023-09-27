@@ -3,4 +3,20 @@
  #Dissertation code
  #27/09/23
  
- 
+ #create function for random walk simulator
+def randomWalkSimulator():
+    #initialise coordinate and time lists
+    xCoords = []
+    yCoords = []
+    zCoords = []
+    time = []
+    
+    #initalise known variables
+    fluidViscosity = 10**(-3)        #unit of Pascal seconds
+    sphereRadius = 0.5 * 10**(-6)    #unit of metres
+    kb = 1.380649 * 10**(-23)        #unit of Joules per unit Kelvin
+    temperature = 300                #unit of Kelvin
+    
+    #
+    
+    
