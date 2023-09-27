@@ -1,25 +1,69 @@
- #Holly Chandler
- #Fast Image Analysis of Swimming Microbes
- #Dissertation code
- #27/09/23
- 
- #create function for random walk simulator
+#Holly Chandler
+#Fast Image Analysis of Swimming Microbes
+#Dissertation code
+#27/09/23
+import math  #for more complex math equations
+import numpy  as np
+import matplotlib.pyplot as plt
+
+#create function for random walk simulator
 def randomWalkSimulator():
     #initialise coordinate and time lists
     xCoords = []
     yCoords = []
     zCoords = []
     time = []
-    
+   
+    #initialise first position of sphere
+    xCoords.append(0)
+    yCoords.append(0)
+    zCoords.append(0)
+    time.append(0) 
+   
     #initalise known variables
     fluidViscosity = 10**(-3)        #unit of Pascal seconds
     sphereRadius = 0.5 * 10**(-6)    #unit of metres
     kb = 1.380649 * 10**(-23)        #unit of Joules per unit Kelvin
-    temp = 300                #unit of Kelvin
+    temp = 300                       #unit of Kelvin
+    frameRate = 100                  #unit of Hertz
+    timePeriod = 1/frameRate         #unit of Time
     
     #calculating the Diffusion Coefficient
-    diffusionCoeff = (kb*temp)/(6*pi()*fluidViscosity*sphereRadius)
+    diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius)   #unit of metres squared per second
     
+    #initialising the parameters of the Gaussian distribution
     
+    mean = 0                        #as we can equally go in any direction from the current position
+    currentTime = 0
+    currentX = 0
+    currentY = 0
+    currentZ = 0 
+    numSteps = 1000                 #change for a longer/shorter analysis
+    standardDeviation = math.sqrt(diffusionCoeff*timePeriod)
+    
+    #calulate each position for each step
+    for step in range (0,numSteps):
+        currentTime += timePeriod  #add the change in time to find the new time
+        time.append(currentTime)   #add to time array
+        
+        #calculate the change for each coordinate
+        xchange = np.random.normal(mean,standardDeviation) 
+        ychange = np.random.normal(mean,standardDeviation)
+        zchange = np.random.normal(mean,standardDeviation)
+        
+        currentX +=xchange
+        currentY+=ychange
+        currentZ+=zchange
+        
+        xCoords.append(currentX)
+        yCoords.append(currentY)
+        zCoords.append(currentZ)
+
+    plt.plot(xCoords,yCoords)
+    plt.show()
+    plt.plot(time,xCoords)
+    plt.show()
+randomWalkSimulator()
+        
     
     
