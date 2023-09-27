@@ -30,7 +30,7 @@ def randomWalkSimulator():
     
     #calculating the Diffusion Coefficient
     diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius)   #unit of metres squared per second
-    
+    diffusionCoeff = 2.3*10**(-9)
     #initialising the parameters of the Gaussian distribution
     
     mean = 0                        #as we can equally go in any direction from the current position
@@ -38,8 +38,9 @@ def randomWalkSimulator():
     currentX = 0
     currentY = 0
     currentZ = 0 
-    numSteps = 1000                 #change for a longer/shorter analysis
+    numSteps = 100000                 #change for a longer/shorter analysis
     standardDeviation = math.sqrt(diffusionCoeff*timePeriod)
+    changes = []
     
     #calulate each position for each step
     for step in range (0,numSteps):
@@ -51,18 +52,32 @@ def randomWalkSimulator():
         ychange = np.random.normal(mean,standardDeviation)
         zchange = np.random.normal(mean,standardDeviation)
         
-        currentX +=xchange
-        currentY+=ychange
-        currentZ+=zchange
+        #update the current position of the sphere
+        currentX += xchange
+        currentY += ychange
+        currentZ += zchange
         
+        #add current position to the arrays
         xCoords.append(currentX)
         yCoords.append(currentY)
         zCoords.append(currentZ)
 
-    plt.plot(xCoords,yCoords)
-    plt.show()
-    plt.plot(time,xCoords)
-    plt.show()
+        """ #check gaussian changes
+        changes.append(xchange) """
+
+    #plt.plot(xCoords,yCoords)
+    #plt.show()
+    #plt.plot(time,xCoords)
+    #plt.show()
+    #ax = plt.axes(projection='3d')
+    #ax.plot3D(xCoords, yCoords, zCoords, 'gray')
+    #plt.show()
+    """ print(tot)
+    count, bins, ignored = plt.hist(changes, 30, density=True)
+    plt.plot(bins, 1/(standardDeviation * np.sqrt(2 * np.pi)) *
+               np.exp( - (bins - mean)**2 / (2 * standardDeviation**2) ),
+                linewidth=2, color='r')
+    plt.show() """
 randomWalkSimulator()
         
     
