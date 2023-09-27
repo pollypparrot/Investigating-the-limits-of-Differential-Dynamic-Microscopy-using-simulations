@@ -15,8 +15,11 @@ def randomWalkSimulator():
     fluidViscosity = 10**(-3)        #unit of Pascal seconds
     sphereRadius = 0.5 * 10**(-6)    #unit of metres
     kb = 1.380649 * 10**(-23)        #unit of Joules per unit Kelvin
-    temperature = 300                #unit of Kelvin
+    temp = 300                #unit of Kelvin
     
-    #
+    #calculating the Diffusion Coefficient
+    diffusionCoeff = (kb*temp)/(6*pi()*fluidViscosity*sphereRadius)
+    
+    
     
     
