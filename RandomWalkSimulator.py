@@ -1,40 +1,27 @@
 #Holly Chandler
 #Fast Image Analysis of Swimming Microbes
 #Dissertation code
+#Random Walk
 #27/09/23
+
 import math  #for more complex math equations
 import numpy  as np
-import matplotlib.pyplot as plt
+
+from createGraphs import threeDimensionGraphPlot
+from createGraphs import twoDimensionGraphPlot
+from createGraphs import HistogramAndGaussLine
+
 
 #global constants
 kb = 1.380649 * 10**(-23)        #Botlzmanns Constant. Unit of Joules per unit Kelvin.
+
 
 #calculate the diffusion coefficient
 def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
     diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius) #unit of metres squared per second
     return diffusionCoeff
 
-#draw a 2D plot with coordinates given in arrays
-def twoDimensionGraphPlot(xCoords,yCoords,xLabel,yLabel):
-    plt.plot(xCoords,yCoords)
-    plt.xlabel(xLabel)
-    plt.ylabel(yLabel)
-    plt.show()
 
-#draw a 3D plot with coordinates given in arrays
-def threeDimensionGraphPlot(xCoords,yCoords,zCoords,xLabel,yLabel,zLabel):
-    ax = plt.axes(projection='3d')
-    ax.plot3D(xCoords, yCoords, zCoords, 'blue')
-    plt.show()
-    
-def drawHistogramAndGaussLine(mean,standardDeviation,checkArray):
-    count, bins, ignored = plt.hist(checkArray, 30, density=True)
-    plt.plot(bins, 1/(standardDeviation * np.sqrt(2 * np.pi)) *
-               np.exp( - (bins - mean)**2 / (2 * standardDeviation**2) ),
-                linewidth=2, color='r')
-    plt.show()
-    
-    
 #create function for random walk simulator
 def randomWalkSimulator():
     
@@ -62,10 +49,10 @@ def randomWalkSimulator():
 
     #initialising the parameters of the Gaussian distribution
     mean = 0                        #as we can equally go in any direction from the current position
-    standardDeviation = math.sqrt(2*diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
+    standardDeviation = math.sqrt(diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
     
     #set 
-    numSteps = 10000                 #change for a longer/shorter analysis
+    numSteps = 100000                 #change for a longer/shorter analysis
     changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
     
     #calulate each position for each step
@@ -97,9 +84,6 @@ def randomWalkSimulator():
     twoDimensionGraphPlot(time,xCoords,"Time","X axis")
     twoDimensionGraphPlot(time,yCoords,"Time","Y axis")
     twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
-    threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis")
-    drawHistogramAndGaussLine(mean,standardDeviation,changesTracker)
+    threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion")
+    HistogramAndGaussLine(mean,standardDeviation,changesTracker)
 randomWalkSimulator()
-        
-    
-    
