@@ -77,13 +77,18 @@ def randomWalkSimulator():
 
         #check gaussian changes
         changesTracker.append(xchange)
-
-    twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
-    twoDimensionGraphPlot(xCoords,zCoords,"X axis","Z axis")
-    twoDimensionGraphPlot(yCoords,zCoords,"Y axis","Z axis")
-    twoDimensionGraphPlot(time,xCoords,"Time","X axis")
-    twoDimensionGraphPlot(time,yCoords,"Time","Y axis")
-    twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
-    threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion")
+    
+    #plot histogram to check changes    
     HistogramAndGaussLine(mean,standardDeviation,changesTracker)
-randomWalkSimulator()
+    
+    #return arrays of all coordinate functions
+    return xCoords,yCoords,zCoords,time
+
+xCoords,yCoords,zCoords,time = randomWalkSimulator()
+twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
+twoDimensionGraphPlot(xCoords,zCoords,"X axis","Z axis")
+twoDimensionGraphPlot(yCoords,zCoords,"Y axis","Z axis")
+twoDimensionGraphPlot(time,xCoords,"Time","X axis")
+twoDimensionGraphPlot(time,yCoords,"Time","Y axis")
+twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
+threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion")
