@@ -23,7 +23,7 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkSimulator():
+def randomWalkSimulator(numSteps):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float
@@ -52,7 +52,7 @@ def randomWalkSimulator():
     standardDeviation = math.sqrt(diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
     
     #set 
-    numSteps = 100000                 #change for a longer/shorter analysis
+    numSteps = numSteps                 #change for a longer/shorter analysis
     changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
     
     #calulate each position for each step
@@ -84,11 +84,22 @@ def randomWalkSimulator():
     #return arrays of all coordinate functions
     return xCoords,yCoords,zCoords,time
 
-xCoords,yCoords,zCoords,time = randomWalkSimulator()
-twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
+xCoords,yCoords,zCoords,time = randomWalkSimulator(10000)
+
+from meanSquaredDisplacementCalculator import meanDisplacementChecker
+xtimeSteps, xaverageSquaredDisplacement = meanDisplacementChecker(xCoords,100)
+ytimeSteps, yaverageSquaredDisplacement = meanDisplacementChecker(yCoords,100)
+ztimeSteps, zaverageSquaredDisplacement = meanDisplacementChecker(zCoords,100)
+twoDimensionGraphPlot(xtimeSteps,xaverageSquaredDisplacement,"Time Steps","X Average Squared Displacement")
+twoDimensionGraphPlot(ytimeSteps,yaverageSquaredDisplacement,"Time Steps","Y Average Squared Displacement")
+twoDimensionGraphPlot(ztimeSteps,zaverageSquaredDisplacement,"Time Steps","Z Average Squared Displacement")
+
+
+
+""" twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
 twoDimensionGraphPlot(xCoords,zCoords,"X axis","Z axis")
 twoDimensionGraphPlot(yCoords,zCoords,"Y axis","Z axis")
 twoDimensionGraphPlot(time,xCoords,"Time","X axis")
 twoDimensionGraphPlot(time,yCoords,"Time","Y axis")
 twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
-threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion")
+threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion") """
