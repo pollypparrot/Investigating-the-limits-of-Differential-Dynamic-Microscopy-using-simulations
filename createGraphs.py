@@ -23,7 +23,7 @@ def threeDimensionGraphPlot(xCoords,yCoords,zCoords,xLabel,yLabel,zLabel,title):
     ax.set_zlabel(zLabel)
     plt.show()
   
-    
+#draw a histogram of data points against a gaussian curve    
 def HistogramAndGaussLine(mean,standardDeviation,checkArray):
     count, bins, ignored = plt.hist(checkArray, 30, density=True)
     plt.plot(bins, 1/(standardDeviation * np.sqrt(2 * np.pi)) *
