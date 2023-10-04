@@ -42,7 +42,7 @@ def randomWalkSimulator(numSteps):
     sphereRadius = 0.5 * 10**(-6)    #unit of metres
     temp = 300                       #unit of Kelvin
     frameRate = 100                  #unit of Hertz
-    timePeriod = 1/frameRate         #unit of Time
+    timePeriod = 1/frameRate         #unit of seconds
     
     #calculating the Diffusion Coefficient
     diffusionCoeff = diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius)   #unit of metres squared per second
@@ -87,13 +87,13 @@ def randomWalkSimulator(numSteps):
 xCoords,yCoords,zCoords,time = randomWalkSimulator(10000)
 
 from meanSquaredDisplacementCalculator import meanDisplacementChecker
-xtimeSteps, xaverageSquaredDisplacement = meanDisplacementChecker(xCoords,100)
-ytimeSteps, yaverageSquaredDisplacement = meanDisplacementChecker(yCoords,100)
-ztimeSteps, zaverageSquaredDisplacement = meanDisplacementChecker(zCoords,100)
+xtimeSteps, xaverageSquaredDisplacement, xgradient= meanDisplacementChecker(xCoords,100)
+ytimeSteps, yaverageSquaredDisplacement, ygradient = meanDisplacementChecker(yCoords,100)
+ztimeSteps, zaverageSquaredDisplacement, zgradient = meanDisplacementChecker(zCoords,100)
 twoDimensionGraphPlot(xtimeSteps,xaverageSquaredDisplacement,"Time Steps","X Average Squared Displacement")
 twoDimensionGraphPlot(ytimeSteps,yaverageSquaredDisplacement,"Time Steps","Y Average Squared Displacement")
 twoDimensionGraphPlot(ztimeSteps,zaverageSquaredDisplacement,"Time Steps","Z Average Squared Displacement")
-
+print(diffusionCoeffCaclculator(300,10**(-3),0.5*10**(-6)), xgradient,ygradient,zgradient)
 
 
 """ twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
