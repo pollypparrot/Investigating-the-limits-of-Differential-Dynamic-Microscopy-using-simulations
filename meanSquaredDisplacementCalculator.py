@@ -4,9 +4,8 @@
 #Mean Squared Displacement calculator
 #27/09/23
 
-from createGraphs import twoDimensionGraphPlot
-
 #mean displacement checker
+#maxStepLength must be smaller than len(coordinates)-1
 def meanDisplacementChecker(coordinates, maxValueOfStepLength):
     
     #Check for human error in Max Step length that would break program.
@@ -43,9 +42,5 @@ def meanDisplacementChecker(coordinates, maxValueOfStepLength):
         squaredisplacementAverages.append(averageDisplacementSquared)
         timeDelays.append(stepLength)
     
-    twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays"," Average Displacement Squared")
-    for item in range (0,len(squaredisplacementAverages)-1):
-        print(squaredisplacementAverages[item])
+    return timeDelays, squaredisplacementAverages
     
-
-meanDisplacementChecker([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],15)
