@@ -1,6 +1,7 @@
 #Holly Chandler
 #Fast Image Analysis of Swimming Microbes
 #Dissertation code
+#Random Walk
 #27/09/23
 import math  #for more complex math equations
 import numpy  as np
@@ -9,10 +10,12 @@ import matplotlib.pyplot as plt
 #global constants
 kb = 1.380649 * 10**(-23)        #Botlzmanns Constant. Unit of Joules per unit Kelvin.
 
+
 #calculate the diffusion coefficient
 def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
     diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius) #unit of metres squared per second
     return diffusionCoeff
+
 
 #draw a 2D plot with coordinates given in arrays
 def twoDimensionGraphPlot(xCoords,yCoords,xLabel,yLabel):
@@ -26,6 +29,7 @@ def threeDimensionGraphPlot(xCoords,yCoords,zCoords,xLabel,yLabel,zLabel):
     ax = plt.axes(projection='3d')
     ax.plot3D(xCoords, yCoords, zCoords, 'blue')
     plt.show()
+  
     
 def drawHistogramAndGaussLine(mean,standardDeviation,checkArray):
     count, bins, ignored = plt.hist(checkArray, 30, density=True)
@@ -33,6 +37,7 @@ def drawHistogramAndGaussLine(mean,standardDeviation,checkArray):
                np.exp( - (bins - mean)**2 / (2 * standardDeviation**2) ),
                 linewidth=2, color='r')
     plt.show()
+    
     
     
 #create function for random walk simulator
@@ -65,7 +70,7 @@ def randomWalkSimulator():
     standardDeviation = math.sqrt(diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
     
     #set 
-    numSteps = 1000                 #change for a longer/shorter analysis
+    numSteps = 100000                 #change for a longer/shorter analysis
     changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
     
     #calulate each position for each step
@@ -99,7 +104,46 @@ def randomWalkSimulator():
     twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
     threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis")
     drawHistogramAndGaussLine(mean,standardDeviation,changesTracker)
-randomWalkSimulator()
+#randomWalkSimulator()
+
+#mean displacement checker
+def meanDisplacementChecker(coordinates):
+    #initialise lists
+    timeDelays = [0]
+    squaredisplacementAverages = [0]
+    
+    #pick a number of steps in the graph
+    numberOfTimeDelays = 9  #must be smaller than the len(coords) -1
+    
+    #loop for the number of time delays in graph
+    #starting from one as that is the initial step length
+    for stepLength in range(1,numberOfTimeDelays+1):
         
+        #reset the total displacement squared for each steplength
+        totalDisplacementSquared = 0
+        
+        #calculate the number of steps required for this step length
+        numberSteps = len(coordinates) - stepLength
+        
+        #loop though the number of steps required. Starting from index 0
+        for coordinateIndex in range (0,numberSteps-1):
+            
+            #calculate the difference between the current coordinate and the one above
+            #square the difference and add to the total displacements squared
+            difference = coordinates[coordinateIndex + stepLength] -coordinates [coordinateIndex]
+            differenceSquared = difference*difference
+            totalDisplacementSquared +=differenceSquared
+        
+        #once all coordinates for a step length are added, calculate the average of the squares
+        averageDisplacementSquared = totalDisplacementSquared / (numberSteps -1)
+        
+        #add average squared displacement and step length to their arrays
+        squaredisplacementAverages.append(averageDisplacementSquared)
+        timeDelays.append(stepLength)
     
+    twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays"," Average Displacement Squared")
+    for item in range (0,len(squaredisplacementAverages)-1):
+        print(squaredisplacementAverages[item])
     
+
+meanDisplacementChecker([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16])
