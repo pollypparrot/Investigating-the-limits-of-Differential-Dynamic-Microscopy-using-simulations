@@ -4,7 +4,7 @@
 #Mean Squared Displacement calculator
 #27/09/23
 
-import numpy as np
+from scipy import stats
 
 #mean displacement checker
 #maxStepLength must be smaller than len(coordinates)-1
@@ -42,14 +42,12 @@ def meanDisplacementChecker(coordinates, maxValueOfStepLength):
         
         #add average squared displacement and step length to their arrays
         squaredisplacementAverages.append(averageDisplacementSquared)
-        timeDelays.append(stepLength)
+        timeDelays.append(stepLength/100)
     
     #calculate gradient of the graph
     
-    #first transform the singular arrays into a 2D array
-    mixedArray = np.array([timeDelays,squaredisplacementAverages])
-    #calculate gradient
-    gradient = np.gradient(mixedArray)
+    gradient, intercept, r_value, p_value, std_err = stats.linregress(timeDelays, squaredisplacementAverages)
+    
     
     return timeDelays, squaredisplacementAverages, gradient
     
