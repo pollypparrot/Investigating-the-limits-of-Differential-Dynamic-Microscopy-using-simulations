@@ -49,7 +49,7 @@ def randomWalkSimulator(numSteps):
 
     #initialising the parameters of the Gaussian distribution
     mean = 0                        #as we can equally go in any direction from the current position
-    standardDeviation = math.sqrt(diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
+    standardDeviation = math.sqrt(2*diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
     
     #set 
     numSteps = numSteps                 #change for a longer/shorter analysis
@@ -84,12 +84,12 @@ def randomWalkSimulator(numSteps):
     #return arrays of all coordinate functions
     return xCoords,yCoords,zCoords,time
 
-xCoords,yCoords,zCoords,time = randomWalkSimulator(10000)
+xCoords,yCoords,zCoords,time = randomWalkSimulator(90000)
 
 from meanSquaredDisplacementCalculator import meanDisplacementChecker
-xtimeSteps, xaverageSquaredDisplacement, xgradient= meanDisplacementChecker(xCoords,100)
-ytimeSteps, yaverageSquaredDisplacement, ygradient = meanDisplacementChecker(yCoords,100)
-ztimeSteps, zaverageSquaredDisplacement, zgradient = meanDisplacementChecker(zCoords,100)
+xtimeSteps, xaverageSquaredDisplacement, xgradient= meanDisplacementChecker(xCoords,50)
+ytimeSteps, yaverageSquaredDisplacement, ygradient = meanDisplacementChecker(yCoords,50)
+ztimeSteps, zaverageSquaredDisplacement, zgradient = meanDisplacementChecker(zCoords,50)
 twoDimensionGraphPlot(xtimeSteps,xaverageSquaredDisplacement,"Time Steps","X Average Squared Displacement")
 twoDimensionGraphPlot(ytimeSteps,yaverageSquaredDisplacement,"Time Steps","Y Average Squared Displacement")
 twoDimensionGraphPlot(ztimeSteps,zaverageSquaredDisplacement,"Time Steps","Z Average Squared Displacement")
