@@ -7,8 +7,6 @@
 import math  #for more complex math equations
 import numpy  as np
 
-from createGraphs import threeDimensionGraphPlot
-from createGraphs import twoDimensionGraphPlot
 from createGraphs import HistogramAndGaussLine
 
 
@@ -53,7 +51,10 @@ def randomWalkSimulator(numSteps):
     
     #set 
     numSteps = numSteps                 #change for a longer/shorter analysis
-    changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
+    
+    
+    #changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
+    #commented out as no longer needed to check data
     
     #calulate each position for each step
     for step in range (0,numSteps):
@@ -76,30 +77,11 @@ def randomWalkSimulator(numSteps):
         zCoords.append(currentZ)
 
         #check gaussian changes
-        changesTracker.append(xchange)
+        #changesTracker.append(xchange)
     
     #plot histogram to check changes    
-    HistogramAndGaussLine(mean,standardDeviation,changesTracker)
+    #HistogramAndGaussLine(mean,standardDeviation,changesTracker)
     
     #return arrays of all coordinate functions
     return xCoords,yCoords,zCoords,time
 
-xCoords,yCoords,zCoords,time = randomWalkSimulator(90000)
-
-from meanSquaredDisplacementCalculator import meanDisplacementChecker
-xtimeSteps, xaverageSquaredDisplacement, xgradient= meanDisplacementChecker(xCoords,50)
-ytimeSteps, yaverageSquaredDisplacement, ygradient = meanDisplacementChecker(yCoords,50)
-ztimeSteps, zaverageSquaredDisplacement, zgradient = meanDisplacementChecker(zCoords,50)
-twoDimensionGraphPlot(xtimeSteps,xaverageSquaredDisplacement,"Time Steps","X Average Squared Displacement")
-twoDimensionGraphPlot(ytimeSteps,yaverageSquaredDisplacement,"Time Steps","Y Average Squared Displacement")
-twoDimensionGraphPlot(ztimeSteps,zaverageSquaredDisplacement,"Time Steps","Z Average Squared Displacement")
-print(diffusionCoeffCaclculator(300,10**(-3),0.5*10**(-6)), xgradient,ygradient,zgradient)
-
-
-""" twoDimensionGraphPlot(xCoords,yCoords,"X axis","Y axis")
-twoDimensionGraphPlot(xCoords,zCoords,"X axis","Z axis")
-twoDimensionGraphPlot(yCoords,zCoords,"Y axis","Z axis")
-twoDimensionGraphPlot(time,xCoords,"Time","X axis")
-twoDimensionGraphPlot(time,yCoords,"Time","Y axis")
-twoDimensionGraphPlot(time,zCoords,"Time","Z axis")
-threeDimensionGraphPlot(xCoords,yCoords,zCoords,"X axis","Y Axis","Z Axis","Brownian Motion") """
