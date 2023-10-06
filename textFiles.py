@@ -27,8 +27,10 @@ def readIntTabDelimitedFile(fileName):
     txt = file.read()
     data = txt.split()
     for item in range (0,len(data)):
-        data[item] = int(data[item])
+        data[item] = float(data[item])
     file.close()
+    return(data)
+
     
     
 #createTabDelimitedFile("Xcoord",[23,2,5,34,26,4,2,4,5,3])
