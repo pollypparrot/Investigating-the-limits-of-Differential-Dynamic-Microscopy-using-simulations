@@ -12,6 +12,7 @@ def createFile (fileName):
     file = open(fileName, "x")
     file.close()
 
+
 #adds items from the array data into a tab delimited file
 #only input one set of numbers
 def createFileOneData(fileName, data):
@@ -19,6 +20,7 @@ def createFileOneData(fileName, data):
     for item in range (0,len(data)):
         file.write(str(data[item])+"\t")
     file.close()
+
 
 #read data from tab delimited file
 #one set of data
@@ -31,6 +33,7 @@ def readInFileOneData(fileName):
     file.close()
     return(data)
 
+
 #write two sets of data to a tab delimited function
 def makeTabDelimitedFileTwoData(filename,data1,data2,data1Label,data2Label):
     file = open(filename,'w')
@@ -38,6 +41,7 @@ def makeTabDelimitedFileTwoData(filename,data1,data2,data1Label,data2Label):
     for item1, item2 in zip(data1,data2):
         file.write("\n"+"{0}\t{1}".format(item1,item2))
     file.close()
+
 
 #read two sets of data in a tab delimited file
 def readTabDelimitedFileTwoData(filename):
@@ -67,3 +71,50 @@ def readTabDelimitedFileTwoData(filename):
     file.close()
 
     return data1, data2, data1Label, data2Label
+
+
+#write three sets of data to a tab delimited function
+def makeTabDelimitedFileThreeData(filename,data1,data2,data3,data1Label,data2Label,data3Label):
+    file = open(filename,'w')
+    file.write("{0}\t{1}\t{2}".format(data1Label,data2Label,data3Label))
+    for item1, item2, item3 in zip(data1,data2,data3):
+        file.write("\n"+"{0}\t{1}\t{2}".format(item1,item2,item3))
+    file.close()
+
+
+
+#read three sets of data in a tab delimited file
+def readTabDelimitedFileThreeData(filename):
+    file = open(filename,'r')
+    
+    #import data
+    text = file.read()
+    fileData = text.split("\n")
+        
+    #get names of data recieved
+    data1Label,data2Label,data3Label = fileData[0].split()
+    
+    #initialise data arrays
+    data1 = []
+    data2 = []
+    data3 = []
+    
+    #read data line by line
+    for line in range(1,len(fileData)):
+        value1,value2,value3 = fileData[line].split("\t")
+        data1.append(value1)
+        data2.append(value2)
+        data3.append(value3)
+        
+    #change to floats
+    for item in range (0,len(data1)):
+        data1[item] = float(data1[item])
+        data2[item] = float(data2[item])
+        data3[item] = float(data3[item])
+    file.close()
+
+    return data1, data2, data3, data1Label, data2Label, data3Label
+
+makeTabDelimitedFileThreeData("name",[1,2,3,4],[3,2,5,4],[2,3,7,5],"x","y","z")
+data1, data2, data3, data1Label, data2Label, data3Label = readTabDelimitedFileThreeData("name")
+print(data1, data2, data3, data1Label, data2Label, data3Label)
