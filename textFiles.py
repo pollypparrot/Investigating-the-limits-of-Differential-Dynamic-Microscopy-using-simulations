@@ -14,7 +14,7 @@ def createFile (fileName):
 
 #adds items from the array data into a tab delimited file
 #only input one set of numbers
-def createTabDelimitedFile(fileName, data):
+def createFileOneData(fileName, data):
     file = open(fileName, "w")
     for item in range (0,len(data)):
         file.write(str(data[item])+"\t")
@@ -22,7 +22,7 @@ def createTabDelimitedFile(fileName, data):
 
 #read data from tab delimited file
 #one set of data
-def readIntTabDelimitedFile(fileName):
+def readInFileOneData(fileName):
     file = open(fileName,"r")
     txt = file.read()
     data = txt.split()
@@ -31,7 +31,39 @@ def readIntTabDelimitedFile(fileName):
     file.close()
     return(data)
 
+#write two sets of data to a tab delimited function
+def makeTabDelimitedFileTwoData(filename,data1,data2,data1Label,data2Label):
+    file = open(filename,'w')
+    file.write("{0}\t{1}".format(data1Label,data2Label))
+    for item1, item2 in zip(data1,data2):
+        file.write("\n"+"{0}\t{1}".format(item1,item2))
+    file.close()
+
+#read two sets of data in a tab delimited file
+def readTabDelimitedFileTwoData(filename):
+    file = open(filename,'r')
     
+    #import data
+    text = file.read()
+    fileData = text.split("\n")
+        
+    #get names of data recieved
+    data1Label,data2Label = fileData[0].split()
     
-#createTabDelimitedFile("Xcoord",[23,2,5,34,26,4,2,4,5,3])
-#readIntTabDelimitedFile("Xcoord")
+    #initialise data arrays
+    data1 = []
+    data2 = []
+
+    #read data line by line
+    for line in range(1,len(fileData)):
+        value1,value2 = fileData[line].split("\t")
+        data1.append(value1)
+        data2.append(value2)
+    
+    #change to floats
+    for item in range (0,len(data1)):
+        data1[item] = float(data1[item])
+        data2[item] = float(data2[item])
+    file.close()
+
+    return data1, data2, data1Label, data2Label
