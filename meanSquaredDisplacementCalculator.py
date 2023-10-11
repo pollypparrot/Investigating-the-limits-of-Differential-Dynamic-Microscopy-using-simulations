@@ -8,20 +8,30 @@ from scipy import stats
 
 #mean displacement checker
 #maxStepLength must be smaller than len(coordinates)-1
-def meanDisplacementChecker(coordinates, maxValueOfStepLength):
+def meanDisplacementChecker(coordinates):
     
-    #Check for human error in Max Step length that would break program.
-    if (maxValueOfStepLength>= (len(coordinates) -1)):
-        raise ValueError ("Maximum Step Length is too high. Must be smaller than the length of the array input")
-    
+    #calculate max value of step length as the first 20% of array size
+    #div by 5. div rounds down to the nearest integer so makes the smaller choice
+    maxValueOfStepLength = len(coordinates)//5
+   
     #initialise lists
     timeDelays = [0]
     squaredisplacementAverages = [0]
+    
+    #initialise for percentage calculator
+    number = 1
     
     #loop for the number of time delays in graph
     #starting from one as that is the initial step length
     for stepLength in range(1,maxValueOfStepLength+1):
         
+        #for larger data sets (greater than 100) this keeps track and outputs a percentage for how far through the data is
+        #check if the current step being calculated  is a percent of the total number        
+        if (stepLength == number*maxValueOfStepLength//100):
+            #outputs the percent and increase number ahead of the next iteration
+            print(str(number) + "%")
+            number +=1
+            
         #reset the total displacement squared for each steplength
         totalDisplacementSquared = 0
         
