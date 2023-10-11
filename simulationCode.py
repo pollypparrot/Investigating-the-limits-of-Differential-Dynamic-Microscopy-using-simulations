@@ -4,9 +4,12 @@
 #Simulation Code
 
 import pygame 
+import imageio
+import cv2
+import os
 
 #simulator based on the information given by the array.
-def coordinateSimulator(Title,xCoord,yCoord):
+def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
     #initialise pygame
     pygame.init()
     
@@ -16,7 +19,9 @@ def coordinateSimulator(Title,xCoord,yCoord):
     
     #set up a clock that is the same speed as the frame rate of the cameras
     frameRate = pygame.time.Clock()
-    frameRate.tick(100) # set to the speed of the camera- 100Hz
+    frameRate.tick(1/timePeriod) # set to the speed of the camera- 100Hz
+    
+    filenames = []
     
     #do a loop for the number of points in the array
     for step in range (0,len(xCoord)):
@@ -28,14 +33,26 @@ def coordinateSimulator(Title,xCoord,yCoord):
         yPosition = yCoord[step]*1000000 + 512/2
         
         #fill diplay window with black
-        display.fill((0,0,0))
+        display.fill((255,255,255))
         
-        pygame.draw.circle(display,(255,255,255),(xPosition,yPosition),3)
+        pygame.draw.circle(display,(0,0,0),(xPosition,yPosition),3)#    
+
+        #save the file
+        filename = f'code/images/frame_{step}.jpeg'
+        pygame.image.save(display,filename)
+        filenames.append(filename)
     
     
+    out = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'),100,(512,512))
+    for filename in filenames:
+        out.write(cv2.imread(filename))
+    out.release()
+    for filename in set(filenames):
+        os.remove(filename)
+    print('done')
+        
+        
+        
+        
     pygame.quit()
 
-
-import RandomWalkSimulator
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(100000)    
-coordinateSimulator("Hello",xCoords,yCoords)
