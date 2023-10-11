@@ -7,7 +7,7 @@
 import math  #for more complex math equations
 import numpy  as np
 
-from createGraphs import HistogramAndGaussLine
+#from createGraphs import HistogramAndGaussLine
 
 
 #global constants
@@ -21,7 +21,7 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkSimulator(numSteps):
+def randomWalkSimulator(numSteps,fluidViscosity,sphereRadius,temp,frameRate):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float
@@ -35,11 +35,6 @@ def randomWalkSimulator(numSteps):
     zCoords = [currentZ]
     time = [currentTime]
    
-    #initalise known variables
-    fluidViscosity = 10**(-3)        #unit of Pascal seconds
-    sphereRadius = 0.5 * 10**(-6)    #unit of metres
-    temp = 300                       #unit of Kelvin
-    frameRate = 100                  #unit of Hertz
     timePeriod = 1/frameRate         #unit of seconds
     
     #calculating the Diffusion Coefficient
