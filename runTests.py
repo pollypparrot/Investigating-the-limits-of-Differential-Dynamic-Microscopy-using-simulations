@@ -18,7 +18,7 @@ frameRate = 100                  #unit of Hertz
 
 
 
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(1000,fluidViscosity,sphereRadius,temp,frameRate)
+xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(10000,fluidViscosity,sphereRadius,temp,frameRate)
 simulationCode.coordinateSimulator("Brownian Motion",xCoords,yCoords,1/frameRate)
 #timeDelays, squaredisplacementAverages, xgradient = meanSquaredDisplacementCalculator.meanDisplacementChecker(xCoords)
 #print(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius),xgradient) 

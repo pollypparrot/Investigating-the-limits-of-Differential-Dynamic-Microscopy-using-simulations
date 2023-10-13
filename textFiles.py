@@ -114,7 +114,3 @@ def readTabDelimitedFileThreeData(filename):
     file.close()
 
     return data1, data2, data3, data1Label, data2Label, data3Label
-
-makeTabDelimitedFileThreeData("name",[1,2,3,4],[3,2,5,4],[2,3,7,5],"x","y","z")
-data1, data2, data3, data1Label, data2Label, data3Label = readTabDelimitedFileThreeData("name")
-print(data1, data2, data3, data1Label, data2Label, data3Label)

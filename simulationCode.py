@@ -3,8 +3,8 @@
 #Dissertation code
 #Simulation Code
 
-import pygame 
-import imageio
+import pygame
+import math 
 import cv2
 import os
 
@@ -17,9 +17,7 @@ def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
     display = pygame.display.set_mode((512,512))  #512 pixels by 512 pixels
     pygame.display.set_caption(Title) #set a lable on the frame
     
-    #set up a clock that is the same speed as the frame rate of the cameras
-    frameRate = pygame.time.Clock()
-    frameRate.tick(1/timePeriod) # set to the speed of the camera- 100Hz
+    FrameRate= 1/timePeriod
     
     filenames = []
     
@@ -32,18 +30,18 @@ def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
         xPosition = xCoord[step]*1000000 + 512/2 
         yPosition = yCoord[step]*1000000 + 512/2
         
-        #fill diplay window with black
-        display.fill((255,255,255))
-        
-        pygame.draw.circle(display,(0,0,0),(xPosition,yPosition),3)#    
-
+        #change each of the pixels individually
+        for x in range (0,513):
+            for y in range(0,513):
+                colour =  round(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)))
+                pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
         #save the file
         filename = f'code/images/frame_{step}.jpeg'
         pygame.image.save(display,filename)
         filenames.append(filename)
     
     
-    out = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'),100,(512,512))
+    out = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'),FrameRate,(512,512))
     for filename in filenames:
         out.write(cv2.imread(filename))
     out.release()
