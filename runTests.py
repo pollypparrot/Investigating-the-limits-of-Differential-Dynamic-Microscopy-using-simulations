@@ -26,6 +26,7 @@ videoTitle = "Test"
 
 
 xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate)
+print(xCoords)
 simulationCode.coordinateSimulator(videoTitle,xCoords,yCoords,frameRate,videoTitle,particleSize,xFrameLength,yFrameLength)
 #timeDelays, squaredisplacementAverages, xgradient = meanSquaredDisplacementCalculator.meanDisplacementChecker(xCoords)
 #print(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius),xgradient) 
