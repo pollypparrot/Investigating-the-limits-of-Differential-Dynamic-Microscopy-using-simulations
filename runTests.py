@@ -9,16 +9,23 @@ import RandomWalkSimulator
 import simulationCode
 import textFiles
 
-#initalise known variables
+#initalise known variables about system
 fluidViscosity = 10**(-3)        #unit of Pascal seconds
 sphereRadius = 0.5 * 10**(-6)    #unit of metres
 temp = 300                       #unit of Kelvin
 frameRate = 100                  #unit of Hertz
 
+#more set variables
+xFrameLength = 512
+yFrameLength = 512
+particleSize = 2  #in micro m
+numStepsAnalysed = 100
+
+#Saving video options
+videoTitle = "Test"
 
 
-
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(10000,fluidViscosity,sphereRadius,temp,frameRate)
-simulationCode.coordinateSimulator("Brownian Motion",xCoords,yCoords,1/frameRate)
+xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate)
+simulationCode.coordinateSimulator(videoTitle,xCoords,yCoords,frameRate,videoTitle,particleSize,xFrameLength,yFrameLength)
 #timeDelays, squaredisplacementAverages, xgradient = meanSquaredDisplacementCalculator.meanDisplacementChecker(xCoords)
 #print(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius),xgradient) 

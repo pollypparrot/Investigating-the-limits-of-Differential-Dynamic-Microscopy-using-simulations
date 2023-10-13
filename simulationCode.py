@@ -9,16 +9,14 @@ import cv2
 import os
 
 #simulator based on the information given by the array.
-def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
+def coordinateSimulator(Title,xCoord,yCoord,frameRate,videoFileName,particleSize,xframeSize,yframeSize):
     #initialise pygame
     pygame.init()
     
     #set up the display screen that the user sees
-    display = pygame.display.set_mode((512,512))  #512 pixels by 512 pixels
+    display = pygame.display.set_mode((xframeSize,yframeSize))  #512 pixels by 512 pixels
     pygame.display.set_caption(Title) #set a lable on the frame
-    
-    FrameRate= 1/timePeriod
-    
+        
     filenames = []
     
     #do a loop for the number of points in the array
@@ -27,13 +25,13 @@ def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
         pygame.display.update()
 
         #set position of circle *100000 in order to make each pixcel = 1 um. + 512/2 to make starting position in the middle of the screen
-        xPosition = xCoord[step]*1000000 + 512/2 
-        yPosition = yCoord[step]*1000000 + 512/2
+        xPosition = xCoord[step]*1000000 + xframeSize/2 
+        yPosition = yCoord[step]*1000000 + yframeSize/2
         
         #change each of the pixels individually
-        for x in range (0,513):
-            for y in range(0,513):
-                colour =  round(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)))
+        for x in range (0,xframeSize+1):
+            for y in range(0,yframeSize+1):
+                colour =  round(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
                 pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
         #save the file
         filename = f'code/images/frame_{step}.jpeg'
@@ -41,7 +39,7 @@ def coordinateSimulator(Title,xCoord,yCoord,timePeriod):
         filenames.append(filename)
     
     
-    out = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'),FrameRate,(512,512))
+    out = cv2.VideoWriter(videoFileName+'.avi',cv2.VideoWriter_fourcc(*'DIVX'),frameRate,(xframeSize,yframeSize))
     for filename in filenames:
         out.write(cv2.imread(filename))
     out.release()
