@@ -19,11 +19,10 @@ frameRate = 100                  #unit of Hertz
 xFrameLength = 512
 yFrameLength = 512
 particleSize = 2  #in micro m
-numStepsAnalysed = 100
+numStepsAnalysed = 1000
 
 #Saving video options
 videoTitle = "Test"
-
 
 xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate)
 print(xCoords)
