@@ -11,16 +11,23 @@ import textFiles
 
 #initalise known variables about system
 fluidViscosity = 10**(-3)        #unit of Pascal seconds
-sphereRadius = 0.5 * 10**(-6)    #unit of metres
+sphereRadius = 1 * 10**(-6)    #unit of metres
 temp = 300                       #unit of Kelvin
-frameRate = 100                  #unit of Hertz
 
-#more set variables
-xFrameLength = 512
-yFrameLength = 512
-particleSize = 2  #in radius of pixel circle
+#initialise variables for the camera
+frameRate = 100                  #unit of Hertz
+xFrameLength = 512 #in no.pixels
+yFrameLength = 512 #in no. pixels
 pixelSize = 1e-6 #in m
-numStepsAnalysed = 100
+
+#initialise general particle variables
+particleSize = sphereRadius/pixelSize  #in radius of pixel circle
+
+#decideing length of data
+videoLength = 3 #in seconds
+
+#videoLength*frameRate must be integer for code to work.
+numStepsAnalysed = int(videoLength*frameRate)
 
 #Saving video options
 videoTitle = "Test"
