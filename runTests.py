@@ -18,18 +18,19 @@ frameRate = 100                  #unit of Hertz
 #more set variables
 xFrameLength = 512
 yFrameLength = 512
-particleSize = 2  #in micro m
+particleSize = 2  #in radius of pixel circle
+pixelSize = 1e-6 #in m
 numStepsAnalysed = 100
 
 #Saving video options
 videoTitle = "Test"
-0
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength)
-print(xCoords)
-print(yCoords)
-timeDelays, squaredisplacementAverages, gradient= meanSquaredDisplacementCalculator.findGradient(xCoords,frameRate)
+
+
+xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,pixelSize)
+timeDelays, squaredisplacementAverages, gradient= meanSquaredDisplacementCalculator.findGradient(xCoords,frameRate,pixelSize)
 createGraphs.twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays","mean displacement squared")
-print(gradient)
+print(gradient,RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))
+
 
 #simulationCode.coordinateSimulator(videoTitle,xCoords,yCoords,frameRate,videoTitle,particleSize,xFrameLength,yFrameLength)
 #timeDelays, squaredisplacementAverages, xgradient = meanSquaredDisplacementCalculator.meanDisplacementChecker(xCoords)

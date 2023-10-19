@@ -7,9 +7,13 @@
 from scipy import stats
 import createGraphs
 
+def calculateGradient(xCoords,yCoords):
+    gradient, intercept, r_value, p_value, std_err = stats.linregress(xCoords, yCoords)
+    return gradient
+
 #mean displacement checker
 #maxStepLength must be smaller than len(coordinates)-1
-def meanDisplacementChecker(coordinates,percentOfDataForTimeDelay,frameRate):
+def meanDisplacementChecker(coordinates,percentOfDataForTimeDelay,frameRate,pixelSize):
     
     #calculate max value of step length as the first 20% of array size
     #div by 5. div rounds down to the nearest integer so makes the smaller choice
@@ -44,7 +48,7 @@ def meanDisplacementChecker(coordinates,percentOfDataForTimeDelay,frameRate):
             
             #calculate the difference between the current coordinate and the one above
             #square the difference and add to the total displacements squared
-            difference = coordinates[coordinateIndex + stepLength] -coordinates [coordinateIndex]
+            difference = (coordinates[coordinateIndex + stepLength] -coordinates [coordinateIndex])*pixelSize #as coordinates are given in pixel size
             differenceSquared = difference*difference
             totalDisplacementSquared +=differenceSquared
         
@@ -54,21 +58,29 @@ def meanDisplacementChecker(coordinates,percentOfDataForTimeDelay,frameRate):
         #add average squared displacement and step length to their arrays
         squaredisplacementAverages.append(averageDisplacementSquared)
         timeDelays.append(stepLength/frameRate)
+        print("Time delays")
+        print(timeDelays)
+        print("Square................")
+        print(squaredisplacementAverages)
+        
+    return timeDelays, squaredisplacementAverages
     
-    #calculate gradient of the graph
     
-    
-    gradient, intercept, r_value, p_value, std_err = stats.linregress(timeDelays, squaredisplacementAverages)
-    
-    
+def findGradient(coords,frameRate,pixelSize):
+    #start with 20%
+    timeDelays, squaredisplacementAverages = meanDisplacementChecker(coords,20,frameRate,pixelSize)
+    #to ensure they know to check before graph appears
+    input("Prepare to pick up to what point you would like the gradient to be plotted (Press enter to continue)")
+    #show graph
+    createGraphs.twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays","mean displacement squared")
+    #input maximum time delay
+    timeDelayChosen = float(input("Up to which time delay would you like the gradient to be plotted to?   "))
+    #calculate the chosen index
+    chosenIntIndex = round(timeDelayChosen*frameRate)
+    #calculate chosen percent
+    chosenPercent = chosenIntIndex/len(coords)*100
+    #caclculate new arrays and gradient
+    timeDelays, squaredisplacementAverages = meanDisplacementChecker(coords,chosenPercent,frameRate,pixelSize)
+    gradient = calculateGradient(timeDelays,squaredisplacementAverages)
+    #return results
     return timeDelays, squaredisplacementAverages, gradient
-    
-    
-def findGradient(coords,frameRate):
-        timeDelays, squaredisplacementAverages, gradient = meanDisplacementChecker(coords,20,frameRate)
-        input("Prepare to pick up to what point you would like the gradient to be plotted (Press enter to continue)")
-        createGraphs.twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays","mean displacement squared")
-        timeDelayChosen = float(input("Up to which time delay would you like the gradient to be plotted to?   "))
-        chosenIntIndex = round(timeDelayChosen*frameRate)
-        timeDelays, squaredisplacementAverages, gradient = meanDisplacementChecker(coords,chosenIntIndex,frameRate)
-        return timeDelays, squaredisplacementAverages, gradient

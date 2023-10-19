@@ -21,7 +21,7 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize):
+def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,pixelSize):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float                  #initial y position
@@ -59,7 +59,7 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
         
         for coordNumber in range(0,2):
             #calculate change for each coordinate
-            change = np.random.normal(mean,standardDeviation) *1000000
+            change = np.random.normal(mean,standardDeviation) *1/pixelSize
             #coordinate
             coordinateCurrent = coordinates[coordNumber]
             
