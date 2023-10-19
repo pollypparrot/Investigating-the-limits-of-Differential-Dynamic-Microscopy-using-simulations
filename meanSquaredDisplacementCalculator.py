@@ -58,10 +58,6 @@ def meanDisplacementChecker(coordinates,percentOfDataForTimeDelay,frameRate,pixe
         #add average squared displacement and step length to their arrays
         squaredisplacementAverages.append(averageDisplacementSquared)
         timeDelays.append(stepLength/frameRate)
-        print("Time delays")
-        print(timeDelays)
-        print("Square................")
-        print(squaredisplacementAverages)
         
     return timeDelays, squaredisplacementAverages
     
