@@ -38,6 +38,6 @@ numStepsAnalysed = int(videoLength*frameRate)
 #Saving video options
 videoTitle = "Test"
 
-xCoords,yCoords,zCoords,time = runAndTumble.randomWalkCoordinateGenerator(numStepsAnalysed,frameRate,xFrameLength,yFrameLength,pixelSize,runTime,runVelocity,tumbleTime)
+xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,pixelSize)
 print(xCoords,yCoords,zCoords)
 simulationCode.coordinateSimulator("Run and Tumble",xCoords,yCoords,frameRate,"RunAndTumble",particleSize,xFrameLength,yFrameLength)

@@ -21,7 +21,7 @@ def randomDirection():
     #return values
     return xDirection,yDirection,zDirection
 
-def randomWalkCoordinateGenerator(numSteps,frameRate,xFrameSize,yFrameSize,pixelSize,runTime,runVelocity,tumbleTime):
+def randomandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,pixelSize,runTime,runVelocity,tumbleTime):
     
     #calculate time period
     timePeriod = 1/frameRate
@@ -31,8 +31,10 @@ def randomWalkCoordinateGenerator(numSteps,frameRate,xFrameSize,yFrameSize,pixel
     currentZ = 0                   #initial z position
     
     #initialise coordinate and time lists. Set starting point to that chosen above
-    xCoords = [np.random.randint(0,xFrameSize)]
-    yCoords = [np.random.randint(0,yFrameSize)]
+    #xCoords = [np.random.randint(0,xFrameSize)]
+    #yCoords = [np.random.randint(0,yFrameSize)]
+    xCoords = [20]
+    yCoords = [10]
     zCoords = [currentZ]
     time = [currentTime]
     
@@ -58,9 +60,6 @@ def randomWalkCoordinateGenerator(numSteps,frameRate,xFrameSize,yFrameSize,pixel
         xCoordsNew = xCoords[step] + timePeriod*runVelocity*xDirection*1/pixelSize
         yCoordsNew = yCoords[step] + timePeriod*runVelocity*yDirection*1/pixelSize
         zCoordsNew = zCoords[step] + timePeriod*runVelocity*zDirection*1/pixelSize
-        
-        newCoordinates = [xCoordsNew,yCoordsNew,zCoordsNew]
-        boundries = [xFrameSize,yFrameSize,xFrameSize] #set xframesize for z for timebeing NEED TO CHANGE !
         
         if (xCoordsNew>xFrameSize):
             xCoordsNew-=xFrameSize
