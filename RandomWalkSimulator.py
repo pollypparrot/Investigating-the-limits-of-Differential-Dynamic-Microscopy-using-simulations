@@ -21,17 +21,15 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkSimulator(numSteps,fluidViscosity,sphereRadius,temp,frameRate):
+def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize):
     
     #set starting location of sphere and parameters
-    currentTime = 0                 #set to initial time of 0. Float
-    currentX = 0                    #initial x position
-    currentY = 0                    #initial y position
-    currentZ = 0                    #initial z position
+    currentTime = 0                 #set to initial time of 0. Float                  #initial y position
+    currentZ = 0                  #initial z position
     
     #initialise coordinate and time lists. Set starting point to that chosen above
-    xCoords = [currentX]
-    yCoords = [currentY]
+    xCoords = [np.random.randint(0,xFrameSize) ]
+    yCoords = [np.random.randint(0,yFrameSize) ]
     zCoords = [currentZ]
     time = [currentTime]
    
@@ -51,26 +49,34 @@ def randomWalkSimulator(numSteps,fluidViscosity,sphereRadius,temp,frameRate):
     #changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
     #commented out as no longer needed to check data
     
+    coordinates = [xCoords,yCoords]
+    boundries = [xFrameSize,yFrameSize]
+    
     #calulate each position for each step
     for step in range (0,numSteps):
         currentTime += timePeriod  #add the change in time to find the new time
         time.append(currentTime)   #add to time array
         
-        #calculate the change for each coordinate
-        xchange = np.random.normal(mean,standardDeviation) 
-        ychange = np.random.normal(mean,standardDeviation)
-        zchange = np.random.normal(mean,standardDeviation)
+        for coordNumber in range(0,2):
+            #calculate change for each coordinate
+            change = np.random.normal(mean,standardDeviation) *1000000
+            #coordinate
+            coordinateCurrent = coordinates[coordNumber]
+            
+            #find the new coordinate by adding the previous change
+            newCoordinate = coordinateCurrent[step] + change
+            #check the boundry condition
+            boundry = boundries[coordNumber]
+            #if it is greater than boundry then it s off the screen, remove boundry to wrap around
+            if newCoordinate > boundry:
+                newCoordinate -= boundry
+            #if it is less than zero it is off the screen, add the boundry to wrap around
+            elif newCoordinate<0:
+                newCoordinate+=boundry  
+            #append the new coordinate
+            coordinates[coordNumber].append(newCoordinate)
+            
         
-        #update the current position of the sphere
-        currentX += xchange
-        currentY += ychange
-        currentZ += zchange
-        
-        #add current position to the arrays
-        xCoords.append(currentX)
-        yCoords.append(currentY)
-        zCoords.append(currentZ)
-
         #check gaussian changes
         #changesTracker.append(xchange)
     

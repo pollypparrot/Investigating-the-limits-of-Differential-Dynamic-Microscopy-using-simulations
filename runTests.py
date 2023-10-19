@@ -19,13 +19,14 @@ frameRate = 100                  #unit of Hertz
 xFrameLength = 512
 yFrameLength = 512
 particleSize = 2  #in micro m
-numStepsAnalysed = 1000
+numStepsAnalysed = 100
 
 #Saving video options
 videoTitle = "Test"
 
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkSimulator(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate)
+xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength)
 print(xCoords)
+print(yCoords)
 simulationCode.coordinateSimulator(videoTitle,xCoords,yCoords,frameRate,videoTitle,particleSize,xFrameLength,yFrameLength)
 #timeDelays, squaredisplacementAverages, xgradient = meanSquaredDisplacementCalculator.meanDisplacementChecker(xCoords)
 #print(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius),xgradient) 
