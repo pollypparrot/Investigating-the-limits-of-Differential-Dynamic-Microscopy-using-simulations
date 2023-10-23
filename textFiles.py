@@ -5,7 +5,8 @@
 #27/09/23
 
 import split
-  
+import linecache
+
 #create new file
 #WARNING will overwrite data in file if it already exists (useful for running program many times but be careful)
 def createFile (fileName):
@@ -77,8 +78,8 @@ def readTabDelimitedFileTwoData(filename):
 def makeTabDelimitedFileThreeData(filename,data1,data2,data3,data1Label,data2Label,data3Label):
     file = open(filename,'w')
     file.write("{0}\t{1}\t{2}".format(data1Label,data2Label,data3Label))
-    for item1, item2, item3 in zip(data1,data2,data3):
-        file.write("\n"+"{0}\t{1}\t{2}".format(item1,item2,item3))
+    for x in range(0,len(data1)):
+        file.write("\n"+"{0}\t{1}\t{2}".format(data1[x],data2[x],data3[x]))
     file.close()
 
 
@@ -114,3 +115,13 @@ def readTabDelimitedFileThreeData(filename):
     file.close()
 
     return data1, data2, data3, data1Label, data2Label, data3Label
+
+
+#read three sets of data in a tab delimited file
+def readTabDelimitedFileThreeDataSpecificLineAsFloat(filename,lineNumber):
+    #read data line by line
+    value1,value2,value3 = linecache.getline(filename,lineNumber,module_globals=None).split("\t")
+    value1 = float(value1)
+    value2=float(value2)
+    value3=float(value3)
+    return value1,value2,value3

@@ -21,7 +21,7 @@ def randomDirection():
     #return values
     return xDirection,yDirection,zDirection
 
-def randomandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,pixelSize,runTime,runVelocity,tumbleTime):
+def randomandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,pixelSize,runTime,runVelocity):
     
     #calculate time period
     timePeriod = 1/frameRate
@@ -31,10 +31,8 @@ def randomandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,pixelSiz
     currentZ = 0                   #initial z position
     
     #initialise coordinate and time lists. Set starting point to that chosen above
-    #xCoords = [np.random.randint(0,xFrameSize)]
-    #yCoords = [np.random.randint(0,yFrameSize)]
-    xCoords = [20]
-    yCoords = [10]
+    xCoords = [np.random.randint(0,xFrameSize)]
+    yCoords = [np.random.randint(0,yFrameSize)]
     zCoords = [currentZ]
     time = [currentTime]
     

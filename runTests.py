@@ -23,6 +23,7 @@ pixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
+numParticles = 20
 
 #initialise run and tumble variables
 runTime = 1 #in seconds
@@ -38,6 +39,17 @@ numStepsAnalysed = int(videoLength*frameRate)
 #Saving video options
 videoTitle = "Test"
 
-xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,pixelSize)
-print(xCoords,yCoords,zCoords)
-simulationCode.coordinateSimulator("Run and Tumble",xCoords,yCoords,frameRate,"RunAndTumble",particleSize,xFrameLength,yFrameLength)
+
+fileNames = []
+for x in range(1,6):
+    print("generating set" + str(x))
+    xCoords,yCoords,zCoords,time = runAndTumble.randomandTumbleCoordinates(numStepsAnalysed,frameRate,xFrameLength,yFrameLength,pixelSize,runTime,runVelocity)
+    print("appending")
+    filename = f'code/coords/set_{x}.txt'
+    textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,xCoords,"X","Y","Z")
+    fileNames.append(filename)
+
+print("startSim")
+simulationCode.coordinateSimulatorMultiple("Run and Tumble",frameRate,videoTitle,particleSize,xFrameLength,yFrameLength,fileNames,numStepsAnalysed)
+
+##ISSUE WITH Z COORDS COMING BACK EMPTY RANDOM WALK
