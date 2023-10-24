@@ -21,7 +21,7 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,pixelSize):
+def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float                  #initial y position
@@ -30,7 +30,7 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
     #initialise coordinate and time lists. Set starting point to that chosen above
     xCoords = [np.random.randint(0,xFrameSize) ]
     yCoords = [np.random.randint(0,yFrameSize) ]
-    zCoords = [currentZ]
+    zCoords = [np.random.randint(-zCutOff,zCutOff)]
     time = [currentTime]
    
     timePeriod = 1/frameRate         #unit of seconds
@@ -76,7 +76,13 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
             #append the new coordinate
             coordinates[coordNumber].append(newCoordinate)
             
-        
+        change = np.random.normal(mean,standardDeviation) *1/pixelSize 
+        newZCoordinate = zCoords[step] + change
+        if (newZCoordinate>zCutOff):
+            newZCoordinate-=zCutOff
+        elif(newZCoordinate<-zCutOff):
+            newZCoordinate+=zCutOff
+        zCoords.append(newZCoordinate)
         #check gaussian changes
         #changesTracker.append(xchange)
     

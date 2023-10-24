@@ -9,6 +9,7 @@ import RandomWalkSimulator
 import simulationCode
 import textFiles
 import runAndTumble
+import math
 
 #initalise known variables about system
 fluidViscosity = 10**(-3)        #unit of Pascal seconds
@@ -24,6 +25,9 @@ pixelSize = 1e-6 #in m
 #initialise general particle variables
 particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
 numParticles = 20
+maxPixelStack = 5 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
+
+zCutOff = math.sqrt(255*(1/maxPixelStack)) // 1 #constant. Div 1 to get lowest integer number
 
 #initialise run and tumble variables
 runTime = 1 #in seconds
@@ -39,17 +43,17 @@ numStepsAnalysed = int(videoLength*frameRate)
 #Saving video options
 videoTitle = "Test"
 
-
+print(zCutOff)
 fileNames = []
-for x in range(1,6):
+for x in range(1,2):
     print("generating set" + str(x))
-    xCoords,yCoords,zCoords,time = runAndTumble.randomandTumbleCoordinates(numStepsAnalysed,frameRate,xFrameLength,yFrameLength,pixelSize,runTime,runVelocity)
+    xCoords,yCoords,zCoords,time = runAndTumble.runandTumbleCoordinates(numStepsAnalysed,frameRate,xFrameLength,yFrameLength,zCutOff,pixelSize,runTime,runVelocity)
     print("appending")
     filename = f'code/coords/set_{x}.txt'
-    textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,xCoords,"X","Y","Z")
+    textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 
 print("startSim")
-simulationCode.coordinateSimulatorMultiple("Run and Tumble",frameRate,videoTitle,particleSize,xFrameLength,yFrameLength,fileNames,numStepsAnalysed)
+#simulationCode.coordinateSimulatorMultiple("Run and Tumble",frameRate,videoTitle,particleSize,xFrameLength,yFrameLength,fileNames,numStepsAnalysed,maxPixelStack)
 
 ##ISSUE WITH Z COORDS COMING BACK EMPTY RANDOM WALK

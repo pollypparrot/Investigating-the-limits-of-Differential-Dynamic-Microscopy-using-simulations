@@ -24,7 +24,7 @@ def createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
     print('done') 
 
 #simulator based on the information given by the array.
-def coordinateSimulatorOneParticle(Title,xCoord,yCoord,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize):
+def coordinateSimulatorOneParticle(Title,xCoord,yCoord,zCoord,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,maxPixelStack):
     #initialise pygame
     pygame.init()
     
@@ -50,6 +50,7 @@ def coordinateSimulatorOneParticle(Title,xCoord,yCoord,frameRate,videoFileName,p
         #set position of circle *100000 in order to make each pixcel = 1 um. + 512/2 to make starting position in the middle of the screen
         xPosition = xCoord[step]
         yPosition = yCoord[step]
+        zPosition = zCoord[step]
         
         #change each of the pixels individually to correct colout
         for x in range (0,xFrameSize+1):
@@ -58,7 +59,7 @@ def coordinateSimulatorOneParticle(Title,xCoord,yCoord,frameRate,videoFileName,p
                 #0.2 allows for up to 5 particles on top of each other
                 #255 is maximum intensity
                 #exponential calculates degree of intensity based on the particle
-                colour =  round(0.2*255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
+                colour =  round(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2))/(maxPixelStack*zPosition**2))
                 #draw point
                 pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
                 
@@ -78,7 +79,7 @@ def coordinateSimulatorOneParticle(Title,xCoord,yCoord,frameRate,videoFileName,p
 
 
 #simulator based on the information given by the array.
-def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,coordinateFileNames,numSteps):
+def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,coordinateFileNames,numSteps,maxPixelStack):
     #initialise pygame
     pygame.init()
     
@@ -112,7 +113,7 @@ def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFram
                     #0.2 allows for up to 5 particles on top of each other
                     #255 is maximum intensity
                     #exponential calculates degree of intensity based on the particle
-                    colour += 0.2*255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2))
+                    colour += (255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack*zPosition**2)
                     #draw point
                 if (colour == 0):
                     pass
