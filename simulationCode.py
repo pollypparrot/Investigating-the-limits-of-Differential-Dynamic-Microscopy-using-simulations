@@ -79,7 +79,7 @@ def coordinateSimulatorOneParticle(Title,xCoord,yCoord,zCoord,frameRate,videoFil
 
 
 #simulator based on the information given by the array.
-def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,coordinateFileNames,numSteps,maxPixelStack):
+def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,maxPixelStack):
     #initialise pygame
     pygame.init()
     
@@ -95,7 +95,6 @@ def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFram
     
     #do a loop for the number of points in the array
     for step in range (0,numSteps):
-        print(step)
         #print updates of how far through image creation is
         if (step == number*numSteps//100):
             #outputs the percent and increase number ahead of the next iteration
@@ -113,13 +112,13 @@ def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFram
                     #0.2 allows for up to 5 particles on top of each other
                     #255 is maximum intensity
                     #exponential calculates degree of intensity based on the particle
-                    colour += (255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack*zPosition**2)
+                    colour += ((1-(zPosition/zCutOff)**2))*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
                     #draw point
                 if (colour == 0):
                     pass
                 else:
                     colour = round(colour)
-                pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
+                [pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)]
                 
         #update the display screen
         pygame.display.update()

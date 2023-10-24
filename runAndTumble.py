@@ -33,7 +33,6 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pix
     xCoords = [np.random.randint(0,xFrameSize)]
     yCoords = [np.random.randint(0,yFrameSize)]
     zCoords = [np.random.randint(-zCutOff,zCutOff)]
-    print(zCoords)
     time = [currentTime]
     
     #calculate the number of runs expected and a counter to track changes
