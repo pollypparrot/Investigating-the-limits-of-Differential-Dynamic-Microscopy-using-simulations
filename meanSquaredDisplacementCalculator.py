@@ -77,6 +77,7 @@ def findGradient(coords,frameRate,pixelSize):
     chosenPercent = chosenIntIndex/len(coords)*100
     #caclculate new arrays and gradient
     timeDelays, squaredisplacementAverages = meanDisplacementChecker(coords,chosenPercent,frameRate,pixelSize)
+    createGraphs.twoDimensionGraphPlot(timeDelays,squaredisplacementAverages,"Time Delays","mean displacement squared")
     gradient = calculateGradient(timeDelays,squaredisplacementAverages)
     #return results
     return timeDelays, squaredisplacementAverages, gradient

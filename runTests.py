@@ -43,7 +43,11 @@ numStepsAnalysed = int(videoLength*frameRate)
 #Saving video options
 videoTitle = "Test"
 
-print(zCutOff)
+
+xCoords,yCoords,zCoords,time=RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,zCutOff,pixelSize)
+textFiles.makeTabDelimitedFileThreeData("filename",xCoords,yCoords,zCoords,"X","Y","Z")
+meanSquaredDisplacementCalculator.findGradient(zCoords,frameRate,pixelSize)
+""" print(zCutOff)
 fileNames = []
 for x in range(1,2):
     print("generating set" + str(x))
@@ -54,6 +58,6 @@ for x in range(1,2):
     fileNames.append(filename)
 
 print("startSim")
-#simulationCode.coordinateSimulatorMultiple("Run and Tumble",frameRate,videoTitle,particleSize,xFrameLength,yFrameLength,fileNames,numStepsAnalysed,maxPixelStack)
+simulationCode.coordinateSimulatorMultiple("Run and Tumble",frameRate,videoTitle,particleSize,xFrameLength,yFrameLength,fileNames,numStepsAnalysed,maxPixelStack) """
 
 ##ISSUE WITH Z COORDS COMING BACK EMPTY RANDOM WALK

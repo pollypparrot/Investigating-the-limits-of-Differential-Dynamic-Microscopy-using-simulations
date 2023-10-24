@@ -21,15 +21,14 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize):
+def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,zCutOff,pixelSize):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float                  #initial y position
-    currentZ = 0                  #initial z position
     
     #initialise coordinate and time lists. Set starting point to that chosen above
-    xCoords = [np.random.randint(0,xFrameSize) ]
-    yCoords = [np.random.randint(0,yFrameSize) ]
+    xCoords = [np.random.randint(0,xFrameLength) ]
+    yCoords = [np.random.randint(0,yFrameLength) ]
     zCoords = [np.random.randint(-zCutOff,zCutOff)]
     time = [currentTime]
    
@@ -42,18 +41,14 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
     mean = 0                        #as we can equally go in any direction from the current position
     standardDeviation = math.sqrt(2*diffusionCoeff*timePeriod) # taken from the probability of movement function for brownian motion
     
-    #set 
-    numSteps = numSteps                 #change for a longer/shorter analysis
-    
-    
     #changesTracker = [] # used to keep track of the numbers generated from the number generator to then be plotted on a histogram with the gaussian curve
     #commented out as no longer needed to check data
     
     coordinates = [xCoords,yCoords]
-    boundries = [xFrameSize,yFrameSize]
+    boundries = [xFrameLength,yFrameLength]
     
     #calulate each position for each step
-    for step in range (0,numSteps):
+    for step in range (0,numStepsAnalysed):
         currentTime += timePeriod  #add the change in time to find the new time
         time.append(currentTime)   #add to time array
         
