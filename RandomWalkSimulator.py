@@ -21,14 +21,14 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameLength,yFrameLength,zCutOff,pixelSize):
+def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float                  #initial y position
     
     #initialise coordinate and time lists. Set starting point to that chosen above
-    xCoords = [np.random.randint(0,xFrameLength) ]
-    yCoords = [np.random.randint(0,yFrameLength) ]
+    xCoords = [np.random.randint(0,xFrameSize) ]
+    yCoords = [np.random.randint(0,yFrameSize) ]
     zCoords = [np.random.randint(-zCutOff,zCutOff)]
     time = [currentTime]
    
@@ -45,7 +45,7 @@ def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,
     #commented out as no longer needed to check data
     
     coordinates = [xCoords,yCoords]
-    boundries = [xFrameLength,yFrameLength]
+    boundries = [xFrameSize,yFrameSize]
     
     #calulate each position for each step
     for step in range (0,numStepsAnalysed):
