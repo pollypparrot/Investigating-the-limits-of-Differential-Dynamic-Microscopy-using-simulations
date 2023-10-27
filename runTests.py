@@ -35,14 +35,14 @@ runVelocity = 100e-6 # in m/s
 tumbleTime = 0.01 #in seconds
 
 #initialise circularTrajectories variables
-angularVelocity = 100
+angularVelocity = 7
 distanceFromCentre = 10
 
 #decideing length of data
-videoLength = 10 #in seconds
+videoLength = 3 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
-numStepsAnalysed = int(videoLength*frameRate)
+numSteps = int(videoLength*frameRate)
 
 #Saving video options
 videoFileName = "Test"
@@ -51,14 +51,14 @@ videoFileName = "Test"
 fileNames = []
 for x in range(0,numParticles):
     print("generating set" + str(x))
-    xCoords,yCoords,zCoords,time = RandomWalkSimulator.randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize)
+    xCoords,yCoords,zCoords,time = circularTrajectories.angularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,angularVelocity,distanceFromCentre)
     print("appending")
     filename = f'code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 
 print("startSim")
-simulationCode.simulatorParticleByParticle("Run and Tumble",frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numStepsAnalysed,maxPixelStack)
+simulationCode.simulatorParticleByParticle("Run and Tumble",frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,maxPixelStack)
 
 """ 
 xp=40

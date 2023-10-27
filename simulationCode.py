@@ -23,62 +23,7 @@ def createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
         os.remove(filename)
     print('done') 
 
-#simulator based on the information given by the array.
-def coordinateSimulatorMultiple(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,maxPixelStack):
-    #initialise pygame
-    pygame.init()
-    
-    #set up the display screen that the user sees
-    display = pygame.display.set_mode((xFrameSize,yFrameSize))  #512 pixels by 512 pixels
-    pygame.display.set_caption(Title) #set a lable on the frame
-        
-    imagefilenames = []
-    
-    print("Starting Image creation")
-    #initialise for percentage calculator
-    number = 1   
-    
-    #do a loop for the number of points in the array
-    for step in range (0,numSteps):
-        #print updates of how far through image creation is
-        if (step == number*numSteps//100):
-            #outputs the percent and increase number ahead of the next iteration
-            print(str(number) + "%")
-            number +=1
-        
-        #change each of the pixels individually to correct colout
-        for x in range (0,xFrameSize+1):
-            for y in range(0,yFrameSize+1):
-                colour = 0
-                for filename in coordinateFileNames:
-                    #find the new position of the particle
-                    xPosition,yPosition,zPosition = textFiles.readTabDelimitedFileThreeDataSpecificLineAsFloat(filename,step+2)
-                    #calculate colour
-                    #0.2 allows for up to 5 particles on top of each other
-                    #255 is maximum intensity
-                    #exponential calculates degree of intensity based on the particle
-                    colour += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
-                    #draw point
-                if (colour == 0):
-                    pass
-                else:
-                    colour = round(colour)
-                [pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)]
-                
-        #update the display screen
-        pygame.display.update()
-        
-        #save the screen at that point
-        filename = f'code/images/frame_{step}.png'
-        pygame.image.save(display,filename)
-        #add to image list
-        imagefilenames.append(filename)
-    
-    createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,imagefilenames)
-
-        
-    pygame.quit()
-
+#boundryConditionsFunction
 def checkxyboundries(coordinate,boundry):
     if coordinate>=boundry:
         coordinate-=boundry
@@ -86,6 +31,7 @@ def checkxyboundries(coordinate,boundry):
         coordinate+=boundry
     return coordinate
 
+#checkIf the value is 0.0 as round() gives errors if 0.0
 def checkxyRound(coordinate):
     if coordinate == 0:
         coordinate = 0
@@ -100,7 +46,8 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
     #set up the display screen that the user sees
     display = pygame.display.set_mode((xFrameSize,yFrameSize))  #512 pixels by 512 pixels
     pygame.display.set_caption(Title) #set a lable on the frame
-        
+    
+    #initilase pixel array and array of images    
     imagefilenames = []
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
 
@@ -121,10 +68,13 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
             print(str(number) + "%")
             number +=1
 
+        #for each trajectory
         for filename in coordinateFileNames:
             
+            #find particle position
             xPosition,yPosition,zPosition = textFiles.readTabDelimitedFileThreeDataSpecificLineAsFloat(filename,step+2)
             
+            #calculate a box around the gaussian splodge as all relevant informaion is within it
             subtraction = 3*particleSize
             xStart = round(checkxyRound(xPosition -subtraction))
             yStart = round(checkxyRound(yPosition -subtraction))
@@ -137,8 +87,10 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
                     x = checkxyboundries(x,xFrameSize)
                     y = checkxyboundries(y,yFrameSize)
                     
+                    #add in the change of colour for the splodge at that point
                     colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
-                    
+        
+        #add colour to every pixel if it is non-zero colour for the particles position
         for x in range (0,xFrameSize):
             for y in range(0,yFrameSize):
                 colour = colourArray[x][y]
@@ -147,6 +99,7 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
                 else:
                     colour = round(colour)
                     pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
+                    #reset all values to zero for next go
                     colourArray[x][y] = 0
         #update the display screen
         pygame.display.update()     
@@ -156,6 +109,7 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
         pygame.image.save(display,filename)
         #add to image list
         imagefilenames.append(filename)
+        #clear the screen for next image
         display.fill(0)
 
     

@@ -36,7 +36,7 @@ def angularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSi
         yCoordsNew = yCoords[0] + distanceFromCentre*np.sin(startingAngel+step*angleChangePerStep)
         zCoordsNew = zCoords[0] 
         
-
+        #boundry conditions
         if (xCoordsNew>xFrameSize):
             xCoordsNew-=xFrameSize
         elif (xCoordsNew<0):
