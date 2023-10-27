@@ -24,13 +24,13 @@ pixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
-numParticles = 10
+numParticles = 100
 maxPixelStack = 5 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
 
 zCutOff = 51 #constant. Div 1 to get lowest integer number
 
 #initialise run and tumble variables
-runTime = 1 #in seconds
+runTime = 3 #in seconds
 runVelocity = 100e-6 # in m/s
 tumbleTime = 0.01 #in seconds
 
