@@ -33,7 +33,8 @@ def checkxyboundries(coordinate,boundry):
 
 #checkIf the value is 0.0 as round() gives errors if 0.0
 def checkxyRound(coordinate):
-    if coordinate == 0:
+    if math.isnan(coordinate):
+        print(coordinate)
         coordinate = 0
     else:
         round(coordinate)
@@ -76,8 +77,8 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
             
             #calculate a box around the gaussian splodge as all relevant informaion is within it
             subtraction = 3*particleSize
-            xStart = round(checkxyRound(xPosition -subtraction))
-            yStart = round(checkxyRound(yPosition -subtraction))
+            xStart = int(checkxyRound(xPosition -subtraction)//1)
+            yStart = int(checkxyRound(yPosition -subtraction)//1)
             
             RangeChecked = round(6*particleSize+1)
             
@@ -97,7 +98,7 @@ def simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFram
                 if (colour==0):
                     pass
                 else:
-                    colour = round(colour)
+                    colour = colour//1
                     pygame.draw.circle(display, (colour,colour,colour), (x,y), 1)
                     #reset all values to zero for next go
                     colourArray[x][y] = 0

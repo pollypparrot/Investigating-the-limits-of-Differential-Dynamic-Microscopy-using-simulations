@@ -7,7 +7,7 @@
 import numpy as np
 
 #start with only x and y- axis of rotation is z
-def angularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,angularVelocity,distanceFromCentre):
+def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,angularVelocity,distanceFromCentre):
     #calculate time period
     timePeriod = 1/frameRate
     

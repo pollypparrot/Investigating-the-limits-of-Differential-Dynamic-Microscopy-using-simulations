@@ -21,25 +21,28 @@ temp = 300                       #unit of Kelvin
 frameRate = 100                  #unit of Hertz
 xFrameSize = 512 #in no.pixels
 yFrameSize = 512 #in no. pixels
-zCutOff = 51 #constant. Div 1 to get lowest integer number
+zFrameSize = 512
+zCutOff = zFrameSize/2 #constant. Div 1 to get lowest integer number
 pixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
 numParticles = 100
-maxPixelStack = 2 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
+maxPixelStack = 6 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
 
 #initialise run and tumble variables
-runTime = 1 #in seconds
+avgRunTime = 1 #in seconds
 runVelocity = 100e-6 # in m/s
-tumbleTime = 0.01 #in seconds
+tumbleTime = 0.05 #in seconds
+tumbleAngle = 60
+probTumble = 1/(frameRate*avgRunTime)
 
 #initialise circularTrajectories variables
 angularVelocity = 7
-distanceFromCentre = 10
+distanceFromCentre = 25
 
 #decideing length of data
-videoLength = 3 #in seconds
+videoLength = 5 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
@@ -51,7 +54,7 @@ videoFileName = "Test"
 fileNames = []
 for x in range(0,numParticles):
     print("generating set" + str(x))
-    xCoords,yCoords,zCoords,time = circularTrajectories.angularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,angularVelocity,distanceFromCentre)
+    xCoords,yCoords,zCoords,time = runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,runVelocity,probTumble,tumbleTime,tumbleAngle)
     print("appending")
     filename = f'code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
