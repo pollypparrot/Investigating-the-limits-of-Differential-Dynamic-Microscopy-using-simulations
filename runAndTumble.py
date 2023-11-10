@@ -6,15 +6,12 @@
 import math
 import numpy as np
 
-
-
-
 #pick three random directions
 def randomDirection():
     #random number choice
     xDirection = np.random.randint(-10,10) # set x and y larger so larger velocity at that point to watch
     yDirection = np.random.randint(-10,10)
-    zDirection = np.random.randint(-2,2)
+    zDirection = np.random.randint(-10,10)
     #find normalisation factor
     normalisationFactor = 1/np.sqrt(xDirection**2+yDirection**2+zDirection**2)
     #unit directions
