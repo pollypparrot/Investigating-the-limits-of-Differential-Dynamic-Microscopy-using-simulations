@@ -27,8 +27,8 @@ pixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
-numParticles = 10
-maxPixelStack = 10 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
+numParticles = 100
+maxPixelStack = 15 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
 
 #initialise run and tumble variables
 avgRunTime = 1 #in seconds
@@ -42,7 +42,7 @@ angularVelocity = 7
 distanceFromCentre = 25
 
 #decideing length of data
-videoLength = 1 #in seconds
+videoLength = 5 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
@@ -56,7 +56,7 @@ for x in range(0,numParticles):
     print("generating set" + str(x))
     xCoords,yCoords,zCoords,time = runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,runVelocity,probTumble,tumbleTime,tumbleAngle)
     print("appending")
-    filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/coords/set_{x}.txt'
+    filename = f'code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 

@@ -10,11 +10,14 @@ import os
 import numpy as np
 import textFiles
 import matplotlib.pyplot as plt
+import matplotlib.animation as anim
+import ffmpeg
 
-def createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
+
+def createVideoCOMPRESS(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
     print("Starting Video Making")
     #make the video
-    out = cv2.VideoWriter(videoFileName+'.avi',cv2.VideoWriter_fourcc(*'DIVX'),frameRate,(xFrameSize,yFrameSize))
+    out = cv2.VideoWriter(videoFileName+'.avi',-1,frameRate,(xFrameSize,yFrameSize))
     #write each file to video
     for filename in filenames:
         out.write(cv2.imread(filename))
@@ -23,6 +26,7 @@ def createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
     for filename in set(filenames):
         os.remove(filename)
     print('done') 
+
 
 #boundryConditionsFunction
 def checkxyboundries(coordinate,boundry):
@@ -107,7 +111,7 @@ def OLDPYGAMEsimulatorParticleByParticle(Title,frameRate,videoFileName,particleS
         pygame.display.update()     
     
         #save the screen at that point
-        filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/images/frame_{step}.png'
+        filename = f'code/images/frame_{step}.png'
         pygame.image.save(display,filename)
         #add to image list
         imagefilenames.append(filename)
@@ -115,15 +119,16 @@ def OLDPYGAMEsimulatorParticleByParticle(Title,frameRate,videoFileName,particleS
         display.fill(0)
 
     
-    createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,imagefilenames)
     
     
     
-def    simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,maxPixelStack):
+def   simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,maxPixelStack):
         
     #initilase pixel array and array of images    
     imagefilenames = []
+    ims = []
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
+    fig = plt.figure()
 
     
     #initialise for percentage calculator
@@ -133,7 +138,8 @@ def    simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xF
     #do a loop for the number of points in the array
     for step in range (0,numSteps):
         #reset colourArray to zero
-                
+        colourArray.fill(0)    
+           
         #print updates of how far through image creation is
         if (step == number*numSteps//100):
             #outputs the percent and increase number ahead of the next iteration
@@ -162,18 +168,30 @@ def    simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xF
                     #add in the change of colour for the splodge at that point
                     colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
         
-        plt.imshow(colourArray)
+        
+        
+        
+        
+        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255)
         plt.axis('off')
-        plt.show()  
-         
-    """ 
-        #save the screen at that point
-        filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/images/frame_{step}.png'
-        pygame.image.save(display,filename)
-        #add to image list
+        filename = f'code/images/{step}.png'
+        plt.savefig(filename)
         imagefilenames.append(filename)
-        #clear the screen for next image
-        display.fill(0)
- """
+        
+  
+
+
+
+""" #create the plot
+        #plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255)
+        plt.axis('off')
+        #save to files and save file name
+        filename = f'code/images/frame_{step}.png'
+        plt.savefig(filename)
+        imagefilenames.append(filename)
+        im = plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255,animated=True)
+        ims.append([im])
     
-    createVideo(videoFileName,frameRate,xFrameSize,yFrameSize,imagefilenames)
+    ani = anim.ArtistAnimation(fig,ims,interval=1/frameRate*1000,blit=True)
+    ani.save('dynamic_images.mp4')
+    plt.show() """
