@@ -56,10 +56,11 @@ for x in range(0,numParticles):
     print("generating set" + str(x))
     xCoords,yCoords,zCoords,time = runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize,runVelocity,probTumble,tumbleTime,tumbleAngle)
     print("appending")
-    filename = f'code/coords/set_{x}.txt'
+    filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 
 print("startSim")
-simulationCode.simulatorParticleByParticle("Run and Tumble",frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,maxPixelStack)
+imageFileNames = simulationCode.simulatorParticleByParticle("Run and Tumble",frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,maxPixelStack)
+print(imageFileNames)
 

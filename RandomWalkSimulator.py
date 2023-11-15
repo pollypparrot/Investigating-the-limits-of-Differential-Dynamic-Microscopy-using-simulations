@@ -9,7 +9,6 @@ import numpy  as np
 
 #from createGraphs import HistogramAndGaussLine
 
-
 #global constants
 kb = 1.380649 * 10**(-23)        #Botlzmanns Constant. Unit of Joules per unit Kelvin.
 
@@ -47,39 +46,31 @@ def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,
     coordinates = [xCoords,yCoords]
     boundries = [xFrameSize,yFrameSize]
     
-    #calulate each position for each step
-    for step in range (0,numStepsAnalysed):
-        currentTime += timePeriod  #add the change in time to find the new time
-        time.append(currentTime)   #add to time array
+         
+    #calculate change for each coordinate
+    changex = np.random.normal(mean,standardDeviation) *1/pixelSize
+    changey = np.random.normal(mean,standardDeviation) *1/pixelSize  
+    changez = np.random.normal(mean,standardDeviation) *1/pixelSize 
+    
+    #add change to previous coordinate
+    newX = xCoords[step] + changex
+    newY = yCoords[step] + changey
+    newZ = zCoords[step] + changez
+     
+    #check boundaries
+    newX = newX%xFrameSize
+    newY = newY%yFrameSize        
+    if (newZCoordinate>zCutOff):
+        newZCoordinate-=zCutOff
+    elif(newZCoordinate<-zCutOff):
+        newZCoordinate+=zCutOff
         
-        for coordNumber in range(0,2):
-            #calculate change for each coordinate
-            change = np.random.normal(mean,standardDeviation) *1/pixelSize 
-            #coordinate
-            coordinateCurrent = coordinates[coordNumber]
-            
-            #find the new coordinate by adding the previous change
-            newCoordinate = coordinateCurrent[step] + change
-            #check the boundry condition
-            boundry = boundries[coordNumber]
-            #if it is greater than boundry then it s off the screen, remove boundry to wrap around
-            if newCoordinate > boundry:
-                newCoordinate -= boundry
-            #if it is less than zero it is off the screen, add the boundry to wrap around
-            elif newCoordinate<0:
-                newCoordinate+=boundry  
-            #append the new coordinate
-            coordinates[coordNumber].append(newCoordinate)
-            
-        change = np.random.normal(mean,standardDeviation) *1/pixelSize 
-        newZCoordinate = zCoords[step] + change
-        if (newZCoordinate>zCutOff):
-            newZCoordinate-=zCutOff
-        elif(newZCoordinate<-zCutOff):
-            newZCoordinate+=zCutOff
-        zCoords.append(newZCoordinate)
-        #check gaussian changes
-        #changesTracker.append(xchange)
+    #append new coordinate
+    xCoords.append(newZ)
+    yCoords.append(newY)
+    zCoords.append(newZ)
+    #check gaussian changes
+    #changesTracker.append(xchange)
     
     #plot histogram to check changes    
     #HistogramAndGaussLine(mean,standardDeviation,changesTracker)

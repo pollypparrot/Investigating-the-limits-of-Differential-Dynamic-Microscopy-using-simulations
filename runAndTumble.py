@@ -119,15 +119,9 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,pix
         
         #check boundry condition of   --- kept outside at the moment in case drift velocity will be added
         #x
-        if (xCoordsNew>=xFrameSize):
-            xCoordsNew-=xFrameSize
-        elif (xCoordsNew<0):
-            xCoordsNew+=xFrameSize
+        xCoordsNew=xCoordsNew%xFrameSize
         #y  
-        if (yCoordsNew>=yFrameSize):
-            yCoordsNew-=yFrameSize
-        elif (yCoordsNew<0):
-            yCoordsNew+=yFrameSize
+        yCoordsNew=yCoordsNew%yFrameSize
         #z
         zUpperBoundryCheck = zCoordsNew//zCutOff
         zLowerBoundryCheck = -zCoordsNew//zCutOff

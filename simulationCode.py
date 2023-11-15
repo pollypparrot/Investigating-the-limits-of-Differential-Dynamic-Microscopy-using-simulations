@@ -10,8 +10,6 @@ import os
 import numpy as np
 import textFiles
 import matplotlib.pyplot as plt
-import matplotlib.animation as anim
-import ffmpeg
 
 
 def createVideoCOMPRESS(videoFileName,frameRate,xFrameSize,yFrameSize,filenames):
@@ -90,8 +88,8 @@ def OLDPYGAMEsimulatorParticleByParticle(Title,frameRate,videoFileName,particleS
             for x in range (xStart,xStart+RangeChecked):
                 for y in range(yStart,yStart+RangeChecked):
                     
-                    x = checkxyboundries(x,xFrameSize)
-                    y = checkxyboundries(y,yFrameSize)
+                    x = x%xFrameSize
+                    y = y%yFrameSize
                     
                     #add in the change of colour for the splodge at that point
                     colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
@@ -126,10 +124,7 @@ def   simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFr
         
     #initilase pixel array and array of images    
     imagefilenames = []
-    ims = []
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
-    fig = plt.figure()
-
     
     #initialise for percentage calculator
     number = 1   
@@ -168,30 +163,11 @@ def   simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFr
                     #add in the change of colour for the splodge at that point
                     colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
         
-        
-        
-        
-        
+        #plot colours and save the file in images        
         plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255)
         plt.axis('off')
-        filename = f'code/images/{step}.png'
+        filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/images/{step}.png'
         plt.savefig(filename)
         imagefilenames.append(filename)
+    return imagefilenames
         
-  
-
-
-
-""" #create the plot
-        #plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255)
-        plt.axis('off')
-        #save to files and save file name
-        filename = f'code/images/frame_{step}.png'
-        plt.savefig(filename)
-        imagefilenames.append(filename)
-        im = plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255,animated=True)
-        ims.append([im])
-    
-    ani = anim.ArtistAnimation(fig,ims,interval=1/frameRate*1000,blit=True)
-    ani.save('dynamic_images.mp4')
-    plt.show() """
