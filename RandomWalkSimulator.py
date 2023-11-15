@@ -20,7 +20,7 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize):
+def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,pixelSize):
     
     #set starting location of sphere and parameters
     currentTime = 0                 #set to initial time of 0. Float                  #initial y position
@@ -46,29 +46,29 @@ def randomWalkCoordinateGeneration(numStepsAnalysed,fluidViscosity,sphereRadius,
     coordinates = [xCoords,yCoords]
     boundries = [xFrameSize,yFrameSize]
     
-         
-    #calculate change for each coordinate
-    changex = np.random.normal(mean,standardDeviation) *1/pixelSize
-    changey = np.random.normal(mean,standardDeviation) *1/pixelSize  
-    changez = np.random.normal(mean,standardDeviation) *1/pixelSize 
+    for step in range(0,numSteps):  
+        #calculate change for each coordinate
+        changex = np.random.normal(mean,standardDeviation) *1/pixelSize
+        changey = np.random.normal(mean,standardDeviation) *1/pixelSize  
+        changez = np.random.normal(mean,standardDeviation) *1/pixelSize 
     
-    #add change to previous coordinate
-    newX = xCoords[step] + changex
-    newY = yCoords[step] + changey
-    newZ = zCoords[step] + changez
+        #add change to previous coordinate
+        newX = xCoords[step] + changex
+        newY = yCoords[step] + changey
+        newZ = zCoords[step] + changez
      
-    #check boundaries
-    newX = newX%xFrameSize
-    newY = newY%yFrameSize        
-    if (newZCoordinate>zCutOff):
-        newZCoordinate-=zCutOff
-    elif(newZCoordinate<-zCutOff):
-        newZCoordinate+=zCutOff
+        #check boundaries
+        newX = newX%xFrameSize
+        newY = newY%yFrameSize        
+        if (newZCoordinate>zCutOff):
+            newZCoordinate-=zCutOff
+        elif(newZCoordinate<-zCutOff):
+            newZCoordinate+=zCutOff
         
-    #append new coordinate
-    xCoords.append(newZ)
-    yCoords.append(newY)
-    zCoords.append(newZ)
+        #append new coordinate
+        xCoords.append(newZ)
+        yCoords.append(newY)
+        zCoords.append(newZ)
     #check gaussian changes
     #changesTracker.append(xchange)
     
