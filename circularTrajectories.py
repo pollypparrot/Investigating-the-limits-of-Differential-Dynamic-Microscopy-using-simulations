@@ -7,7 +7,7 @@
 import numpy as np
 
 #start with only x and y- axis of rotation is z
-def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre,pClockwise):
+def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre,pClockwise,pixelSize):
     #calculate time period
     timePeriod = 1/frameRate
     
@@ -26,7 +26,7 @@ def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameS
         clockwise = -1 #false- anticlockwise
     
     #angle setup
-    angleChangePerStep = clockwise*angularVelocity*timePeriod
+    angleChangePerStep = clockwise*angularVelocity*timePeriod*1/pixelSize
     startingAngel = np.random.uniform(0,2*np.pi)
 
     #calulate each position for each step

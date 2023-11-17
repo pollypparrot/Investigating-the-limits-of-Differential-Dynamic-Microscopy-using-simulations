@@ -60,10 +60,10 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
         #check boundaries
         newX = newX%xFrameSize
         newY = newY%yFrameSize        
-        if (newZCoordinate>zCutOff):
-            newZCoordinate-=zCutOff
-        elif(newZCoordinate<-zCutOff):
-            newZCoordinate+=zCutOff
+        if (newZ>zCutOff):
+            newZ-=zCutOff
+        elif(newZ<-zCutOff):
+            newZ+=zCutOff
         
         #append new coordinate
         xCoords.append(newZ)

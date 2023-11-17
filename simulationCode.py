@@ -120,8 +120,8 @@ def OLDPYGAMEsimulatorParticleByParticle(Title,frameRate,videoFileName,particleS
     
     
     
-def   simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,maxPixelStack):
-        
+def   simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps):
+       
     #initilase pixel array and array of images    
     imagefilenames = []
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
@@ -161,12 +161,12 @@ def   simulatorParticleByParticle(Title,frameRate,videoFileName,particleSize,xFr
                     y = checkxyboundries(y,yFrameSize)
                     
                     #add in the change of colour for the splodge at that point
-                    colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))/(maxPixelStack)
+                    colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
         
         #plot colours and save the file in images        
-        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0, vmax=255)
+        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0)
         plt.axis('off')
-        filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/images/{step}.png'
+        filename = f'code/images/{step}.png'
         plt.savefig(filename)
         imagefilenames.append(filename)
     return imagefilenames

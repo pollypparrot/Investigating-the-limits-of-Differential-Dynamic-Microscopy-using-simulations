@@ -11,6 +11,8 @@ import textFiles
 import runAndTumble
 import math
 import circularTrajectories
+import swarmingCoords
+import numpy as np
 
 #initalise known variables about system
 fluidViscosity = 10**(-3)        #unit of Pascal seconds
@@ -19,14 +21,15 @@ temp = 300                       #unit of Kelvin
 
 #initialise variables for the camera
 frameRate = 100                  #unit of Hertz
+timePeriod = 1/frameRate
 xFrameSize = 512 #in no.pixels
 yFrameSize = 512 #in no. pixels
 zFrameSize = 512
 zCutOff = zFrameSize/2 #constant. Div 1 to get lowest integer number
-pixelSize = 1e-6 #in m
+computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
-particleSize = sphereRadius*2/pixelSize  #diameter in pixel size
+particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
 numParticles = 100
 maxPixelStack = 15 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
 
@@ -38,9 +41,13 @@ tumbleAngle = 60
 probTumble = 1/(frameRate*avgRunTime)
 
 #initialise circularTrajectories variables
-angularVelocity = 15
+angularVelocity = 15e-6 #in m/s
 distanceFromCentre = 25
 pClockwise= 0.7
+
+#initialise swarming variables
+flockingRadius = 50
+maxNoiseLevel = 1.5 #number from 0-pi
 
 #decideing length of data
 videoLength = 2 #in seconds
@@ -48,20 +55,17 @@ videoLength = 2 #in seconds
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
 
-#Saving video options
-videoFileName = "Test"
-
-
-fileNames = []
-for x in range(0,numParticles):
-    print("generating set" + str(x))
-    xCoords,yCoords,zCoords,time = circularTrajectories.twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre,pClockwise)
-    print("appending")
+fileNames=[]
+print("makingCoords")
+pixelCoords = swarmingCoords.swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel)
+print("Appending")
+for x in range(0,len(pixelCoords)):
+    xCoords = pixelCoords[x][0]
+    yCoords = pixelCoords[x][1]
+    zCoords = np.zeros(numSteps)
     filename = f'code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 
 print("startSim")
-imageFileNames = simulationCode.simulatorParticleByParticle("Run and Tumble",frameRate,videoFileName,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,maxPixelStack)
-print(imageFileNames)
-
+imageFileNames = simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps)
