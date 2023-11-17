@@ -4,6 +4,7 @@
 #Generate Swarming Coords
 
 import numpy as np
+import math
 
 def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel):
     #set up arrays to store information
@@ -31,9 +32,11 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
         pixelCoords[setup][0][0] = startingX
         pixelCoords[setup][1][0] = startingY
     
+    print(directionArray)
     #need old and new to ensure that particles velocities are changed in bulk and arent based on changes already occured.
     oldDirections = 0
     newDirections = 1
+    x=0
     print("Starting coordinate generation")    
     for step in range (1,numSteps):
         #add new time
@@ -48,8 +51,8 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
 
             
             #find any particles within the boundary and add their angles
-            noInFlocking = 0
-            flockingAngleTot = 0
+            sinTotFlocking = 0
+            cosTotFlocking = 0
             #for each particle
             for item in range(0,numParticles):
                 #calcualte the distance between particles
@@ -59,11 +62,12 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
                 distance = np.sqrt((itemX-oldX)**2+(itemY-oldY)**2)
                 #check if they are close enough to influence
                 if distance<=flockingRadius:
-                    noInFlocking+=1
-                    flockingAngleTot +=directionArray[oldDirections][item]
+                    angle = directionArray[oldDirections][item]
+                    sinTotFlocking +=np.sin(angle)
+                    cosTotFlocking+=np.cos(angle)
             
             #calculate new direction based on average and noise
-            newAngle = flockingAngleTot/noInFlocking + timePeriod*np.random.uniform(-1,1)*maxNoiseLevel
+            newAngle = math.atan2(sinTotFlocking,cosTotFlocking) + timePeriod*np.random.uniform(-1,1)*maxNoiseLevel
             directionArray[newDirections][particle] = newAngle
             
             #find new velocity with new running direction

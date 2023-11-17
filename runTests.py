@@ -30,7 +30,7 @@ computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
-numParticles = 100
+numParticles = 500
 maxPixelStack = 15 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
 
 #initialise run and tumble variables
@@ -46,8 +46,8 @@ distanceFromCentre = 25
 pClockwise= 0.7
 
 #initialise swarming variables
-flockingRadius = 50
-maxNoiseLevel = 1.5 #number from 0-pi
+flockingRadius = 5
+maxNoiseLevel = np.pi #number from 0-pi
 
 #decideing length of data
 videoLength = 2 #in seconds
