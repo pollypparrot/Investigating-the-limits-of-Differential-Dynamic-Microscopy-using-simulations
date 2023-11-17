@@ -32,7 +32,6 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
         pixelCoords[setup][0][0] = startingX
         pixelCoords[setup][1][0] = startingY
     
-    print(directionArray)
     #need old and new to ensure that particles velocities are changed in bulk and arent based on changes already occured.
     oldDirections = 0
     newDirections = 1

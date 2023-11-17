@@ -30,12 +30,12 @@ computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
-numParticles = 500
-maxPixelStack = 15 # maximum number of pixels on top of each other. larger number reduces the intensity per pixel 
+numParticles = 100
+runVelocity = 100e-6 # in m/s  doesnt apply fr brownian motion
+
 
 #initialise run and tumble variables
 avgRunTime = 1 #in seconds
-runVelocity = 100e-6 # in m/s
 tumbleTime = 0.05 #in seconds
 tumbleAngle = 60
 probTumble = 1/(frameRate*avgRunTime)
@@ -50,7 +50,7 @@ flockingRadius = 5
 maxNoiseLevel = np.pi #number from 0-pi
 
 #decideing length of data
-videoLength = 2 #in seconds
+videoLength = 20 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
@@ -68,4 +68,5 @@ for x in range(0,len(pixelCoords)):
     fileNames.append(filename)
 
 print("startSim")
-imageFileNames = simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps)
+simulationTypePath = 'Swarming' + str(flockingRadius)+ '_' + str(maxNoiseLevel) + '_' + str(runVelocity) + '_' + str(numParticles) + '_' + str(particleSize)
+imageFileNames = simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,simulationTypePath)
