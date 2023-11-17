@@ -40,6 +40,7 @@ probTumble = 1/(frameRate*avgRunTime)
 #initialise circularTrajectories variables
 angularVelocity = 15
 distanceFromCentre = 25
+pClockwise= 0.7
 
 #decideing length of data
 videoLength = 2 #in seconds
@@ -54,9 +55,9 @@ videoFileName = "Test"
 fileNames = []
 for x in range(0,numParticles):
     print("generating set" + str(x))
-    xCoords,yCoords,zCoords,time = circularTrajectories.twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre)
+    xCoords,yCoords,zCoords,time = circularTrajectories.twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre,pClockwise)
     print("appending")
-    filename = f'fastImageAnalysisOfSwimmingMicrobes-main/code/coords/set_{x}.txt'
+    filename = f'code/coords/set_{x}.txt'
     textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
     fileNames.append(filename)
 

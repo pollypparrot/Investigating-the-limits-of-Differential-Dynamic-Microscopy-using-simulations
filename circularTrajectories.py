@@ -7,7 +7,7 @@
 import numpy as np
 
 #start with only x and y- axis of rotation is z
-def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre):
+def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,angularVelocity,distanceFromCentre,pClockwise):
     #calculate time period
     timePeriod = 1/frameRate
     
@@ -22,8 +22,8 @@ def twoDimensionangularTrajectoryCoordinateGeneration(numSteps,frameRate,xFrameS
 
     #determine if it is clockwise rotation or not
     clockwise = 1 # true
-    if np.random.uniform(0,1) > 0.5:
-        clockwise = -1 #false
+    if np.random.uniform(0,1) > pClockwise:
+        clockwise = -1 #false- anticlockwise
     
     #angle setup
     angleChangePerStep = clockwise*angularVelocity*timePeriod
