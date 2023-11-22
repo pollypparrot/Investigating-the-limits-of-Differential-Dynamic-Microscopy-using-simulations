@@ -46,11 +46,11 @@ distanceFromCentre = 25
 pClockwise= 0.7
 
 #initialise swarming variables
-flockingRadius = 5
-maxNoiseLevel = np.pi #number from 0-pi
+flockingRadius = 4
+maxNoiseLevel = np.pi/2 #number from 0-pi
 
 #decideing length of data
-videoLength = 20 #in seconds
+videoLength = 8 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
@@ -68,5 +68,5 @@ for x in range(0,len(pixelCoords)):
     fileNames.append(filename)
 
 print("startSim")
-simulationTypePath = 'Swarming' + str(flockingRadius)+ '_' + str(maxNoiseLevel) + '_' + str(runVelocity) + '_' + str(numParticles) + '_' + str(particleSize)
+simulationTypePath = 'Swarming' + '_fr' + str(flockingRadius)+ '_noise' + str(maxNoiseLevel/math.pi) +"pi" + '_v' + str(runVelocity) + '_noP' + str(numParticles) + '_s' + str(particleSize)
 imageFileNames = simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,simulationTypePath)
