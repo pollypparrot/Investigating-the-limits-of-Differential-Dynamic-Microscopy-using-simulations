@@ -120,11 +120,7 @@ def OLDPYGAMEsimulatorParticleByParticle(Title,frameRate,videoFileName,particleS
     
     
     
-def   simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,simulationTypePath):
-    
-    #directory information
-    directory = 'code/images/' + str(simulationTypePath) + '_' + str(frameRate) + '_' + str(particleSize)  + '_' + str(xFrameSize) + '_' + str(yFrameSize) + '_' + str(zCutOff) + '_' + str(numSteps)
-    os.mkdir(directory)       
+def   simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,directory):     
     #initilase pixel array and array of images    
     imagefilenames = []
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
@@ -171,6 +167,5 @@ def   simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,z
         plt.axis('off')
         filename = directory+f'/{step}.png'
         plt.savefig(filename)
-        imagefilenames.append(filename)
-    return imagefilenames
+
         

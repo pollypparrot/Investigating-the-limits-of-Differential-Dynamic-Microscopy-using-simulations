@@ -52,11 +52,20 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
     #need old and new to ensure that particles velocities are changed in bulk and arent based on changes already occured.
     oldDirections = 0
     newDirections = 1
+    #to track how far through
+    number=1
+    
     print("Starting coordinate generation")    
     for step in range (1,numSteps):
         #add new time
         currentTime +=timePeriod
         time.append(currentTime)
+        
+        #print updates of how far through image creation is
+        if (step == number*numSteps//100):
+            #outputs the percent and increase number ahead of the next iteration
+            print(str(number) + "%")
+            number +=1
         
         #calculate new positions
         for particle in range(0,numParticles):

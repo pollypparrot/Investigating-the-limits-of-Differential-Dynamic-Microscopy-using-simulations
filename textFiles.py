@@ -16,21 +16,17 @@ def createFile (fileName):
 
 #adds items from the array data into a tab delimited file
 #only input one set of numbers
-def createFileOneData(fileName, data):
+def createFileOneDataFilename(fileName, data):
     file = open(fileName, "w")
-    for item in range (0,len(data)):
-        file.write(str(data[item])+"\t")
+    file.write(str(data))
     file.close()
 
 
 #read data from tab delimited file
 #one set of data
-def readInFileOneData(fileName):
+def readInFileOneDataFilename(fileName):
     file = open(fileName,"r")
-    txt = file.read()
-    data = txt.split()
-    for item in range (0,len(data)):
-        data[item] = float(data[item])
+    data = file.read()
     file.close()
     return(data)
 
