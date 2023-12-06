@@ -4,7 +4,6 @@
 #Text Files sorter
 #27/09/23
 
-import split
 import linecache
 
 #create new file

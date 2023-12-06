@@ -66,16 +66,16 @@ def swarmingGeneration():
         xCoords = pixelCoords[x][0]
         yCoords = pixelCoords[x][1]
         zCoords = np.zeros(numSteps)
-        filename = f'code/coords/set_{x}.txt'
+        filename = f'coords/set_{x}.txt'
         textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
         fileNames.append(filename)
 
     print("startSim")
     #directory information
-    number = textFiles.readInFileOneDataFilename('code/images/simulationNumber.txt')
-    directory = 'code/images/simulation_' + number
+    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
+    directory = 'images/simulation_' + number
     os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('code/images/simulationNumber.txt',int(number)+1)
+    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
     textFiles.makeTabDelimitedFileTwoData(directory+'_info',['swarming','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','flocking Radius','noise','run velocity'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(flockingRadius),str(maxNoiseLevel),str(runVelocity)],'','')
     simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,directory)
 
@@ -84,37 +84,51 @@ def runAndTumbleGeneration():
     print("makingCoords")
     for x in range(0,numParticles):
         xCoords, yCoords, zCoords, time  = runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutOff,computerPixelSize,runVelocity,probTumble,tumbleTime,tumbleAngle)
-        filename = f'code/coords/set_{x}.txt'
+        filename = f'coords/set_{x}.txt'
         textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
         fileNames.append(filename)
     print("startSim")
     #directory information
-    number = textFiles.readInFileOneDataFilename('code/images/simulationNumber.txt')
-    directory = 'code/images/simulation_' + number
+    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
+    directory = 'images/simulation_' + number
     os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('code/images/simulationNumber.txt',int(number)+1)
+    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
     textFiles.makeTabDelimitedFileTwoData(directory+'_info',['run And Tumble','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off',' Run Velocity','average run time','tumble probability per frame',' tumble time',' tumble angle'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zCutOff),str(runVelocity),str(avgRunTime),str(probTumble),tumbleTime,tumbleAngle],'','')
     simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,directory)
 
 
-def brownianMotionGeneration():
+def brownianMotionGenerationtxtFile():
     fileNames=[]
     print("makingCoords")
     for x in range(0,numParticles):
         xCoords, yCoords, zCoords, time  = RandomWalkSimulator.randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,computerPixelSize)
-        filename = f'code/coords/set_{x}.txt'
+        filename = f'coords/set_{x}.txt'
         textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
         fileNames.append(filename)
     print("startSim")
     #directory information
-    number = textFiles.readInFileOneDataFilename('code/images/simulationNumber.txt')
-    directory = 'code/images/simulation_' + number
+    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
+    directory = 'images/simulation_' + number
     os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('code/images/simulationNumber.txt',int(number)+1)
-    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['brownian Motion','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','fluid Viscoscity','Temperature'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zCutOff),str(fluidViscosity),str(temp)],'','')
+    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
+    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['brownian Motion','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','fluid Viscoscity','Temperature','diffusion coeff'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zCutOff),str(fluidViscosity),str(temp),str(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))],'','')
     simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,fileNames,numSteps,directory)
 
 
-brownianMotionGeneration()
-runAndTumbleGeneration()
-swarmingGeneration()
+def brownianMotionGenerationList():
+    totCoords=[]
+    print("makingCoords")
+    for x in range(0,numParticles):
+        xCoords, yCoords, zCoords, time  = RandomWalkSimulator.randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zCutOff,computerPixelSize)
+        totCoords.append([xCoords,yCoords,zCoords])
+    print("startSim")
+    #directory information
+    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
+    directory = 'images/simulation_' + number
+    os.mkdir(directory)  
+    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
+    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['brownian Motion','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','fluid Viscoscity','Temperature','diffusion coeff'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zCutOff),str(fluidViscosity),str(temp),str(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))],'','')
+    simulationCode.simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,totCoords,numSteps,directory)
+
+
+brownianMotionGenerationList()

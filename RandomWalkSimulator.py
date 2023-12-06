@@ -66,7 +66,7 @@ def randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,fra
             newZ+=zCutOff
         
         #append new coordinate
-        xCoords.append(newZ)
+        xCoords.append(newX)
         yCoords.append(newY)
         zCoords.append(newZ)
     #check gaussian changes
