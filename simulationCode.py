@@ -27,7 +27,7 @@ def checkxyRound(coordinate):
     return(coordinate)   
     
     
-def  simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,coordinateFileNames,numSteps,directory):     
+def  simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,coordinateFileNames,numSteps,directory,zFrameViewOneSize):     
     #initilase pixel array   
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
     
@@ -65,8 +65,11 @@ def  simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zC
                     x = checkxyboundries(x,xFrameSize)
                     y = checkxyboundries(y,yFrameSize)
                     
-                    #add in the change of colour for the splodge at that point
-                    colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
+                    if (zPosition>zFrameViewOneSize)or (zPosition<-zFrameViewOneSize):
+                        pass
+                    else:
+                        #add in the change of colour for the splodge at that point
+                        colourArray[x][y] += (1-(zPosition/zFrameViewOneSize)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
         
         #plot colours and save the file in images        
         plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0)
@@ -75,7 +78,7 @@ def  simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zC
         plt.savefig(filename)
 
         
-def  simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,totCoords,numSteps,directory):     
+def  simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zCutOff,totCoords,numSteps,directory,zFrameViewOneSize):     
     #initilase pixel array  
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
     
@@ -115,8 +118,11 @@ def  simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSiz
                     x = checkxyboundries(x,xFrameSize)
                     y = checkxyboundries(y,yFrameSize)
                     
-                    #add in the change of colour for the splodge at that point
-                    colourArray[x][y] += (1-(zPosition/zCutOff)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
+                    if (zPosition>zFrameViewOneSize)or (zPosition<-zFrameViewOneSize):
+                        pass
+                    else:
+                        #add in the change of colour for the splodge at that point
+                        colourArray[x][y] += (1-(zPosition/zFrameViewOneSize)**2)*(255*math.exp(-((x-xPosition)**2+(y-yPosition)**2)/(2*particleSize**2)))
         
         #plot colours and save the file in images        
         plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0)
