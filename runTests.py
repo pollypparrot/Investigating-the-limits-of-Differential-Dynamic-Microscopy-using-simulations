@@ -51,6 +51,7 @@ pClockwise= 0.7
 #initialise swarming variables
 flockingRadius = 5
 maxNoiseLevel = np.pi/2 #number from 0-pi
+delayedResponseTime=0.05
 
 #decideing length of data
 videoLength = 10 #in seconds
@@ -62,7 +63,7 @@ numSteps = int(videoLength*frameRate)
 def swarmingGeneration():
     fileNames=[]
     print("makingCoords")
-    pixelCoords = swarmingCoords.swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel)
+    pixelCoords = swarmingCoords.swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel,delayedResponseTime)
     print("Appending")
     for x in range(0,len(pixelCoords)):
         xCoords = pixelCoords[x][0]
@@ -80,6 +81,7 @@ def swarmingGeneration():
     textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
     textFiles.makeTabDelimitedFileTwoData(directory+'_info',['swarming','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','flocking Radius','noise','run velocity'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(flockingRadius),str(maxNoiseLevel),str(runVelocity)],'','')
     simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,fileNames,numSteps,directory,zFrameViewOneSize)
+
 
 def runAndTumbleGeneration():
     fileNames=[]
@@ -133,4 +135,4 @@ def brownianMotionGenerationList():
     simulationCode.simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,totCoords,numSteps,directory,zFrameViewOneSize)
 
 
-brownianMotionGenerationList()
+swarmingGeneration()

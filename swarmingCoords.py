@@ -6,15 +6,25 @@
 import numpy as np
 import math
 
-def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel):
+def swarmingResponseNumberOfFrames(timePeriod,delayedResponseTime):
+    noFrames = round(delayedResponseTime/timePeriod)
+    return noFrames+2
+
+
+def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel,delayedResponseTime):
     #set up arrays to store information
-    
+
+    #calculate how many frames it takes to repond:
+    numFramesDelayNeeded = swarmingResponseNumberOfFrames(timePeriod,delayedResponseTime)
+    print(numFramesDelayNeeded)
+
     #direction array stores each particles directions where the index defines which particle it is describing
-    directionArray = np.empty((2,numParticles))
+    directionArray = np.empty((numFramesDelayNeeded,numParticles))
     
     #store all the coords for the pixels
     pixelCoords = np.empty((numParticles,2,numSteps))
-    
+
+
     #store current positions
     currentPositions = np.empty((xFrameSize,yFrameSize))
     for x in range (0,xFrameSize):
@@ -31,7 +41,9 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
     for setup in range(0,numParticles):
         #assign each particle a random angle for direction
         angleDirection = np.random.uniform(0,2*np.pi)
-        directionArray[0][setup] = angleDirection
+        #setup all directions to starting values
+        for direction in range(0,numFramesDelayNeeded):
+            directionArray[direction][setup] = angleDirection
         #generate starting positions
         #until they have their own spot:
         foundSpot = False
@@ -51,10 +63,10 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
                 pass
     #need old and new to ensure that particles velocities are changed in bulk and arent based on changes already occured.
     oldDirections = 0
-    newDirections = 1
+    newDirections = numFramesDelayNeeded-1
     #to track how far through
     number=1
-    
+
     print("Starting coordinate generation")    
     for step in range (1,numSteps):
         #add new time
@@ -72,7 +84,6 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
             #find old position
             oldX = pixelCoords[particle][0][step-1]
             oldY = pixelCoords[particle][1][step-1]
-
             
             #find any particles within the boundary and add their angles
             sinTotFlocking = 0
@@ -120,9 +131,11 @@ def swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocit
                 #stays still
                 pixelCoords[particle][0][step]= oldX
                 pixelCoords[particle][1][step]= oldY
-        #at end of step we need to change which direction array is the old one
-        temporary = oldDirections
-        oldDirections = newDirections
-        newDirections = temporary
+        #at end of step we need to change which direction array is the old one and new location
+        print(oldDirections,newDirections)
+        oldDirections = (oldDirections + 1) % (numFramesDelayNeeded)
+        newDirections = (newDirections + 1) % (numFramesDelayNeeded)
+        print(oldDirections,newDirections)
+        print()
     return pixelCoords
 
