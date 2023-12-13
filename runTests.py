@@ -16,9 +16,9 @@ import numpy as np
 import os
 
 #initalise known variables about system
-fluidViscosity = 10**(-3)        #unit of Pascal seconds
+fluidViscosity = 1.380649e-23       #unit of Pascal seconds
 sphereRadius = 1 * 10**(-6)    #unit of metres
-temp = 300                       #unit of Kelvin
+temp = 1.884955592153876e-15                      #unit of Kelvin
 
 #initialise variables for the camera
 frameRate = 100                  #unit of Hertz
@@ -135,4 +135,4 @@ def brownianMotionGenerationList():
     simulationCode.simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,totCoords,numSteps,directory,zFrameViewOneSize)
 
 
-swarmingGeneration()
+print(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))
