@@ -3,14 +3,14 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 
-filepath = 'images\simulation_0\sim_1_Ut.txt'
-resultPath = 'images\simulation_0\sim_1.results.txt'
+filepath = 'images\sim_1_Ut.txt'
+resultPath = 'images\sim_1.results.txt'
 
 def DDMfunction(t,A,B,tau):
-    y = A*(1-np.exp(t/tau))+B
+    y = A*(1-np.exp(-t/tau))+B
     return y
 
-frameRate = 100
+pixelSize = 1*10**-6
 xFrameSize = 512
 
 file = open(filepath,'r')
@@ -18,25 +18,29 @@ data = []
 time = []
 tauc = []
 qs = []
-deltaq = 2*np.pi*frameRate*xFrameSize
+deltaq = 2*np.pi*pixelSize*xFrameSize
 
 
 for line in file:
     data.append(line.split())
 file.close()
 for step in range(0,len(data)):
-    time.append(np.log(float(data[step][0])))
+    time.append(float(data[step][0]))
 for arrayNumber in range (1,len(data[0])):
     array = []
     for step in range (0,len(data)):
         array.append(float(data[step][arrayNumber]))
     try:
-        print(arrayNumber)
-        parameters, covariance = curve_fit(DDMfunction,time,array)
+        Ainitial = max(array)
+        Binitial = min(array)
+        TauCinitial = 1
+        initialParameters = [Ainitial,Binitial,TauCinitial]
+
+        parameters, covariance = curve_fit(DDMfunction,time,array,initialParameters)
         q = arrayNumber* deltaq
         qs.append(q)
         tauc.append(parameters[2])
-        file = open(resultPath,'w')
+        file = open(resultPath,'a')
         file.write(' n = '+ str(arrayNumber))
         file.write('   q = ' + str(arrayNumber*deltaq))
         file.write('   A = '+ str(parameters[0]))
@@ -47,9 +51,12 @@ for arrayNumber in range (1,len(data[0])):
         file.close()
     except:
         print('q value of ' + str(arrayNumber) + ' could not be calculated')
-plt.plot(qs,tauc)
+plt.scatter(qs,tauc)
+plt.yscale('log')
+plt.xscale('log')
 plt.xlabel("q")
 plt.ylabel("tau")
-plt.xlim(1*10**7,2*10**7)
 plt.show()
+
+
 

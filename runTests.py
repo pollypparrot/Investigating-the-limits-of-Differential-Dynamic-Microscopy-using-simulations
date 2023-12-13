@@ -33,7 +33,7 @@ computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
 particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
-numParticles = 10
+numParticles = 100
 runVelocity = 25e-6 # in m/s  doesnt apply fr brownian motion
 
 
@@ -54,7 +54,7 @@ maxNoiseLevel = np.pi/2 #number from 0-pi
 delayedResponseTime=0.05
 
 #decideing length of data
-videoLength = 10 #in seconds
+videoLength = 5 #in seconds
 
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
