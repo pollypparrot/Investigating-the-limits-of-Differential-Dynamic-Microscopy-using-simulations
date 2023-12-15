@@ -23,8 +23,8 @@ frameRate = 100                  #unit of Hertz
 timePeriod = 1/frameRate
 xFrameSize = 512 #in no.pixels
 yFrameSize = 512 #in no. pixels
-zFrameSize = 512     
-zViewSize = 400
+zFrameSize = 50  #Chosen based on data giving size expansion   
+zViewSize = 50
 zCutoffVolume = zFrameSize/2 #constant. Div 1 to get lowest integer number
 zCutoffView = zViewSize/2
 computerPixelSize = 1e-6 #in m
@@ -32,7 +32,7 @@ computerPixelSize = 1e-6 #in m
 #initialise general particle variables
 particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
 numParticles = 100
-runVelocity = 50e-6 # in m/s  doesnt apply fr brownian motion
+runVelocity = 100e-6 # in m/s  doesnt apply fr brownian motion
 
 
 #initialise run and tumble variables
@@ -57,10 +57,11 @@ videoLength = 10 #in seconds
 #videoLength*frameRate must be integer for code to work.
 numSteps = int(videoLength*frameRate)
 
-
 number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
 directory = 'images/simulation_' + number
 #make place for images to be stored
 os.mkdir(directory)
 textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)  
-swarmingCoords.swarmingCoordGeneration(numSteps,frameRate,xFrameSize,yFrameSize,computerPixelSize,numParticles,particleSize,directory,runVelocity,flockingRadius,maxNoiseLevel,delayedResponseTime)
+#brownianMotion.randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle)
+#swarmingCoords.swarmingCoordGeneration(numSteps,frameRate,xFrameSize,yFrameSize,computerPixelSize,numParticles,particleSize,directory,runVelocity,flockingRadius,maxNoiseLevel,delayedResponseTime)

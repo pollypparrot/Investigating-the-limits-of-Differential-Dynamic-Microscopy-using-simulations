@@ -103,17 +103,17 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
                 xCoordinate = coords[particleIndex][0]
                 yCoordinate = coords[particleIndex][1]
                 
-                #size of particle based on Z frame needs to be calculated HERE
+                apparentZParticleSize = (0.266*zCoordinate+particleSize)/3
             
                 #calculate a box around the GAUSSIAN splodge as all relevant informaion is within it
                 #standard deviation is the apparent particle size
-                subtraction = 3*particleSize
+                subtraction = 3*apparentZParticleSize
                 
                 #find box boundaries that intensity will be calculated within
                 #math.ceiling makes sure to always round up
                 xStart = math.ceil(xCoordinate -subtraction)
                 yStart = math.ceil(yCoordinate -subtraction)
-                RangeChecked = math.ceil(6*particleSize+1)
+                RangeChecked = math.ceil(6*apparentZParticleSize+1)
                 
                 #for the box around the particle (~99% data)
                 for x in range (xStart,xStart+RangeChecked):
@@ -123,7 +123,7 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
                         y = y%yFrameSize
                         
                         #add in the change of colour for the splodge at that point
-                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*particleSize**2)))
+                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))
         
         #once all particle contributions are calculated
         

@@ -145,8 +145,6 @@ def swarmingCoordGeneration(numSteps,frameRate,xFrameSize,yFrameSize,computerPix
             #get position on the grid
             xCoordinate = coords[particleIndex][newCoords][0]
             yCoordinate = coords[particleIndex][newCoords][1]
-                
-            #size of particle based on Z frame needs to be calculated HERE
             
             #calculate a box around the GAUSSIAN splodge as all relevant informaion is within it
             #standard deviation is the apparent particle size
