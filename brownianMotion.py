@@ -6,7 +6,6 @@
 
 import math  
 import numpy  as np
-import os
 import matplotlib.pyplot as plt
 
 #global constants
@@ -22,9 +21,6 @@ def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
 
 #create function for random walk simulator
 def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp):
-    
-    #make place for images to be stored
-    os.mkdir(directory)
     
     #initialise variables for simulation time
     #initilase pixel array   

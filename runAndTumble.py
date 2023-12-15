@@ -6,12 +6,11 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
 #pick three random directions
 def randomDirection():
     #random number choice
-    xDirection = np.random.randint(-100,100) # set x and y larger so larger velocity at that point to watch
+    xDirection = np.random.randint(-100,100) 
     yDirection = np.random.randint(-100,100)
     zDirection = np.random.randint(-100,100)
     #find normalisation factor
@@ -72,9 +71,6 @@ def tumbleStartCheck(probTumble):
     
 #calculates run and tumble images
 def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle):
-
-    #make place for images to be stored
-    os.mkdir(directory)
     
     #initialise variables for simulation time
     #initilase pixel array   
