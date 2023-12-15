@@ -22,6 +22,7 @@ As = []
 Bs = []
 Ds = []
 
+
 deltaq = 2*np.pi*1/(pixelSize*xFrameSize)
 
 
