@@ -23,14 +23,12 @@ frameRate = 100                  #unit of Hertz
 timePeriod = 1/frameRate
 xFrameSize = 512 #in no.pixels
 yFrameSize = 512 #in no. pixels
-zFrameSize = 50  #Chosen based on data giving size expansion   
-zViewSize = 50
+zFrameSize = 512  #Chosen based on data giving size expansion   
 zCutoffVolume = zFrameSize/2 #constant. Div 1 to get lowest integer number
-zCutoffView = zViewSize/2
 computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
-particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
+particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size    
 numParticles = 100
 runVelocity = 100e-6 # in m/s  doesnt apply fr brownian motion
 
@@ -54,14 +52,15 @@ delayedResponseTime=0.05
 #decideing length of data
 videoLength = 10 #in seconds
 
-#videoLength*frameRate must be integer for code to work.
+#videoLength*frameRate must be integer for code to work.   
 numSteps = int(videoLength*frameRate)
 
-number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
-directory = 'images/simulation_' + number
-#make place for images to be stored
-os.mkdir(directory)
-textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)  
-#brownianMotion.randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp)
-runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle)
-#swarmingCoords.swarmingCoordGeneration(numSteps,frameRate,xFrameSize,yFrameSize,computerPixelSize,numParticles,particleSize,directory,runVelocity,flockingRadius,maxNoiseLevel,delayedResponseTime)
+for x in range(8,9):
+    zViewSize = x*64
+    zCutoffView = zViewSize/2
+    directory = 'images/zViewRange0to512/zViewSize_' + str(zViewSize)
+    #make place for images to be stored
+    os.mkdir(directory)
+    #brownianMotion.randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp)
+    runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+    #swarmingCoords.swarmingCoordGeneration(numSteps,frameRate,xFrameSize,yFrameSize,computerPixelSize,numParticles,particleSize,directory,runVelocity,flockingRadius,maxNoiseLevel,delayedResponseTime)

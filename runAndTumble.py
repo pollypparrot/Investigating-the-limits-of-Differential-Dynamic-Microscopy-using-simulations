@@ -6,6 +6,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import textFiles
 
 #pick three random directions
 def randomDirection():
@@ -70,8 +71,9 @@ def tumbleStartCheck(probTumble):
             return 0
     
 #calculates run and tumble images
-def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle):
+def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength):
     
+    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['run And Tumble','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','Z view one size',' Run Velocity','average run time','tumble probability per frame',' tumble time',' tumble angle'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zCutoffVolume),str(zCutoffView),str(runVelocity),str(avgRunTime),str(probTumble),tumbleTime,tumbleAngle],'','')
     #initialise variables for simulation time
     #initilase pixel array   
     colourArray = np.zeros((xFrameSize,yFrameSize),dtype = float)
@@ -112,7 +114,7 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
     #for the number of frames that need to be generated
     for step in range (0,numSteps):
         
-        print(str(step),"/",str(numSteps))
+        #print(str(step),"/",str(numSteps))
         ##NewCoordinateGeneration##
         
         #then go particle by particle for that frame
@@ -149,9 +151,9 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
                     
                     #generate the new direction for the particle to move in and save this                   
                     xDirection,yDirection,zDirection = setAngleChangeDirection(xDirection,yDirection,zDirection,tumbleAngle)
-                    directions[index][0]=xDirection
-                    directions[index][1]=yDirection
-                    directions[index][2]=zDirection
+                    directions[particleIndex][0]=xDirection
+                    directions[particleIndex][1]=yDirection
+                    directions[particleIndex][2]=zDirection
                 
                     #particles do not move during tumbles so the coordinates stay the same
                     #no code needed to change coordinate position
@@ -201,7 +203,7 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
                 xCoordinate = coords[particleIndex][0]
                 yCoordinate = coords[particleIndex][1]
                 
-                apparentZParticleSize = (0.266*zCoordinate+particleSize)/3
+                apparentZParticleSize = (0.266*abs(zCoordinate)+particleSize)/3
             
                 #calculate a box around the GAUSSIAN splodge as all relevant informaion is within it
                 #standard deviation is the apparent particle size
@@ -221,7 +223,7 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
                         y = y%yFrameSize
                         
                         #add in the change of colour for the splodge at that point
-                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))/5 ##NEED MAX PIXEL STACK AGAIN NOT JUST 5
+                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))/2 ##NEED MAX PIXEL STACK AGAIN NOT JUST 5
         
         #once all particle contributions are calculated
         
