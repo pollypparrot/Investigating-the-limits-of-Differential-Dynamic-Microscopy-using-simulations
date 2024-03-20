@@ -5,8 +5,8 @@ import createGraphs
 from scipy import stats
 
 
-filepath = f'images\zViewWholeSize0to256outOf512\zViewSize256_Ut.txt'
-resultPath = f'images\zViewWholeSize0to256outOf512\zViewSize256_output.txt'
+filepath = f'FinalDDMVideos\\Uts\\diffusion_Ut.txt'
+resultPath = f'FinalDDMVideos\\ResultantAnalysis\\diffusion_DDManalysis.txt'
 
 pixelSize = 1*10**-6
 xFrameSize = 512
@@ -45,14 +45,21 @@ def analyseDDMFunctionsBrownianMotion(filepath, pixelSize,xFrameSize):
         TauCinitial = 0.1
 
         initialParameters = [Ainitial,Binitial,TauCinitial]
-        
-        parameters, covariance = curve_fit(DDMfunctionBrownianMotion,time,array,initialParameters)
-        q = arrayNumber* deltaq
-        qs.append(q)
-        As.append(parameters[0])
-        Bs.append(parameters[1])
-        tauc.append(parameters[2])
-        Ds.append(1/(q**2*parameters[2]))
+        try:
+
+            parameters, covariance = curve_fit(DDMfunctionBrownianMotion,time,array,initialParameters)
+            q = arrayNumber* deltaq
+            qs.append(q)
+            As.append(parameters[0])
+            Bs.append(parameters[1])
+            tauc.append(parameters[2])
+            Ds.append(1/(q**2*parameters[2]))
+        except:
+            
+            print("error for q",str(q))
+            plt.plot(time,array)
+            plt.show()
+
         
     file = open(resultPath,'w')
     for index in range(0,len(qs)):
@@ -63,33 +70,5 @@ def analyseDDMFunctionsBrownianMotion(filepath, pixelSize,xFrameSize):
 
 
 qs,As,Bs,tauc,Ds = analyseDDMFunctionsBrownianMotion(filepath, pixelSize,xFrameSize)
-
-
-#finding the gradient of brownian motion analysis on DDM. Expectation is 1.
-""" #
-deltaq = 2*np.pi*1/(pixelSize*xFrameSize)
-
-
-#input maximum time delay
-startq =  190000
-endq = 900000
-#calculate the chosen index
-startindex = round(startq/deltaq)
-endindex = round(endq/deltaq)
-gradient, intercept, r_value, p_value, std_err = stats.linregress(np.log(qs[startindex:endindex]), np.log(Ds[startindex:endindex]))
-print(gradient)
-print(intercept)
-
-xs = []
-ys = []
-for x in range (round(startq),round(endq)):
-    xs.append(x)
-    ys.append(gradient*x+intercept)
-
-plt.plot(xs,ys)
-plt.scatter(qs,Ds)
-plt.yscale('log')
-plt.xscale('log')
-plt.xlabel("q")
-plt.ylabel("D")
-plt.show() """
+plt.plot(qs,Ds)
+plt.show()
