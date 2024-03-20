@@ -14,7 +14,8 @@ kb = 1.380649 * 10**(-23)        #Botlzmanns Constant. Unit of Joules per unit K
 
 #calculate the diffusion coefficient
 def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
-    diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius) #unit of metres squared per second
+    #diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius) #unit of metres squared per second
+    diffusionCoeff = 6.2e-12
     return diffusionCoeff
 
 
@@ -50,7 +51,6 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
     #for the number of frames that need to be generated
     for step in range(0,numSteps):  
         
-        print(str(step),"/",str(numSteps))
         
         ##NewCoordinateGeneration##
         
@@ -103,7 +103,8 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
                 xCoordinate = coords[particleIndex][0]
                 yCoordinate = coords[particleIndex][1]
                 
-                apparentZParticleSize = (0.266*zCoordinate+particleSize)/3
+                #apparentZParticleSize = (0.266*zCoordinate+particleSize)
+                apparentZParticleSize=particleSize
             
                 #calculate a box around the GAUSSIAN splodge as all relevant informaion is within it
                 #standard deviation is the apparent particle size
@@ -123,12 +124,12 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
                         y = y%yFrameSize
                         
                         #add in the change of colour for the splodge at that point
-                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))
+                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))/1.5
         
         #once all particle contributions are calculated
         
         #plot colours and save the file in images        
-        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0)
+        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0,vmax = 255)
         plt.axis('off')
         filename = directory+f'/{step}.png'
-        plt.savefig(filename)
+        plt.savefig(filename,bbox_inches='tight', pad_inches=0)

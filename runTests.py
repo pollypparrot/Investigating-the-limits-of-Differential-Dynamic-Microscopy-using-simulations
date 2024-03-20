@@ -3,44 +3,41 @@
 #Dissertation code
 #Test Data from here
 
-import createGraphs
-import meanSquaredDisplacementCalculator
-import RandomWalkSimulator
-import simulationCode
+
 import textFiles
-import runAndTumble
 import math
 import circularTrajectories
 import swarmingCoords
 import numpy as np
 import os
+import runAndTumble
+import brownianMotion
+import runOnly
 
 #initalise known variables about system
-fluidViscosity = 10**(-3)        #unit of Pascal seconds
-sphereRadius = 1 * 10**(-6)    #unit of metres
-temp = 300                       #unit of Kelvin
+fluidViscosity = 1.380649e-23       #unit of Pascal seconds
+sphereRadius = 1e-6   #unit of metres
+temp = 1.884955592153876e-14                      #unit of Kelvin
 
 #initialise variables for the camera
 frameRate = 100                  #unit of Hertz
 timePeriod = 1/frameRate
 xFrameSize = 512 #in no.pixels
 yFrameSize = 512 #in no. pixels
-zFrameSize = 512
-zFrameViewSize = 400
-zFrameOneSide = zFrameSize/2 #constant. Div 1 to get lowest integer number
-zFrameViewOneSize = zFrameViewSize/2
+zFrameSize = 512  #Chosen based on data giving size expansion   
+zCutoffVolume = zFrameSize/2 #constant. Div 1 to get lowest integer number
 computerPixelSize = 1e-6 #in m
 
 #initialise general particle variables
-particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size
+particleSize = sphereRadius*2/computerPixelSize  #diameter in pixel size #units-pixels    
 numParticles = 100
-runVelocity = 25e-6 # in m/s  doesnt apply fr brownian motion
+runVelocity = 1.42e-05# in m/s 
 
 
 #initialise run and tumble variables
-avgRunTime = 1 #in seconds
-tumbleTime = 0.1 #in seconds
-tumbleAngle = 60
+avgRunTime = 0.86 #in seconds
+tumbleTime = 0.14 #in seconds
+tumbleAngle = 68
 probTumble = 1/(frameRate*avgRunTime)
 
 #initialise circularTrajectories variables
@@ -54,85 +51,226 @@ maxNoiseLevel = np.pi/2 #number from 0-pi
 delayedResponseTime=0.05
 
 #decideing length of data
-videoLength = 5 #in seconds
+videoLength = 10 #in seconds
 
-#videoLength*frameRate must be integer for code to work.
+#videoLength*frameRate must be integer for code to work.   
 numSteps = int(videoLength*frameRate)
 
 
-def swarmingGeneration():
-    fileNames=[]
-    print("makingCoords")
-    pixelCoords = swarmingCoords.swarmingCoordGeneration(numSteps,timePeriod,xFrameSize,yFrameSize,runVelocity,numParticles,computerPixelSize,flockingRadius,maxNoiseLevel,delayedResponseTime)
-    print("Appending")
-    for x in range(0,len(pixelCoords)):
-        xCoords = pixelCoords[x][0]
-        yCoords = pixelCoords[x][1]
-        zCoords = np.zeros(numSteps)
-        filename = f'coords/set_{x}.txt'
-        textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
-        fileNames.append(filename)
+#Brownian motion- 512 visable
+""" 
+zViewSize = 512
+zCutoffView = zViewSize/2
+directory = 'images\dissertationVideos2\diffusionSMALL' 
+#make place for images to be stored
+os.mkdir(directory)
+brownianMotion.randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp) 
+ """
+#purely run motion only- 512 visable
 
-    print("startSim")
-    #directory information
-    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
-    directory = 'images/simulation_' + number
-    os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
-    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['swarming','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','flocking Radius','noise','run velocity'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(flockingRadius),str(maxNoiseLevel),str(runVelocity)],'','')
-    simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,fileNames,numSteps,directory,zFrameViewOneSize)
+""" zViewSize = 512
+zCutoffView = zViewSize/2
 
+runVelocity = 1.42e-05# in m/s 
 
-def runAndTumbleGeneration():
-    fileNames=[]
-    print("makingCoords")
-    for x in range(0,numParticles):
-        xCoords, yCoords, zCoords, time  = runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zFrameOneSide,computerPixelSize,runVelocity,probTumble,tumbleTime,tumbleAngle)
-        filename = f'coords/set_{x}.txt'
-        textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
-        fileNames.append(filename)
-    print("startSim")
-    #directory information
-    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
-    directory = 'images/simulation_' + number
-    os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
-    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['run And Tumble','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','Z view one size',' Run Velocity','average run time','tumble probability per frame',' tumble time',' tumble angle'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zFrameOneSide),str(zFrameViewOneSize),str(runVelocity),str(avgRunTime),str(probTumble),tumbleTime,tumbleAngle],'','')
-    simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,fileNames,numSteps,directory,zFrameViewOneSize)
+directory = 'images\dissertationVideos2\particlesRunOnlyEColi1' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\particlesRunOnlyEColi2' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\particlesRunOnlyEColi3' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
 
 
-def brownianMotionGenerationtxtFile():
-    fileNames=[]
-    print("makingCoords")
-    for x in range(0,numParticles):
-        xCoords, yCoords, zCoords, time  = RandomWalkSimulator.randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zFrameOneSide,computerPixelSize)
-        filename = f'coords/set_{x}.txt'
-        textFiles.makeTabDelimitedFileThreeData(filename,xCoords,yCoords,zCoords,"X","Y","Z")
-        fileNames.append(filename)
-    print("startSim")
-    #directory information
-    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
-    directory = 'images/simulation_' + number
-    os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
-    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['brownian Motion','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','Z frame view one side','fluid Viscoscity','Temperature','diffusion coeff'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zFrameOneSide),str(zFrameViewOneSize),str(fluidViscosity),str(temp),str(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))],'','')
-    simulationCode.simulatorParticleByParticle(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,fileNames,numSteps,directory,zFrameViewOneSize)
+runVelocity = 20e-6# in m/s 
+
+directory = 'images\dissertationVideos2\particlesRunOnly20Speed2' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\particlesRunOnly20Speed3' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+runVelocity = 30e-6# in m/s 
+
+directory = 'images\dissertationVideos2\particlesRunOnly30Speed1' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\particlesRunOnly30Speed2' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\particlesRunOnly30Speed3' 
+os.mkdir(directory)
+runOnly.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,sphereRadius,videoLength) """
+
+#run with instant tumbles- 512 visable
+""" zViewSize = 512
+zCutoffView = zViewSize/2
+probTumble = 1/(frameRate*avgRunTime)
+tumbleTime = 0 #in seconds
+runVelocity = 14.2e-06# in m/s 
+
+directory = 'images\dissertationVideos2\instantTumble1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+runVelocity = 20e-06# in m/s 
+
+directory = 'images\dissertationVideos2\instantTumble20Speed1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble20Speed2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble20Speed3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+runVelocity = 30e-06# in m/s 
+
+directory = 'images\dissertationVideos2\instantTumble30Speed1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble30Speed2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\instantTumble30Speed3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)   """
+
+#run with finite tumbles - 512 visable - RUN THREE TIMES
+""" 
+probTumble = 1/(frameRate*avgRunTime)
+tumbleTime = 0.14 #in seconds
+runVelocity = 1.42e-05# in m/s 
 
 
-def brownianMotionGenerationList():
-    totCoords=[]
-    print("makingCoords")
-    for x in range(0,numParticles):
-        xCoords, yCoords, zCoords, time  = RandomWalkSimulator.randomWalkCoordinateGeneration(numSteps,fluidViscosity,sphereRadius,temp,frameRate,xFrameSize,yFrameSize,zFrameOneSide,computerPixelSize)
-        totCoords.append([xCoords,yCoords,zCoords])
-    print("startSim")
-    #directory information
-    number = textFiles.readInFileOneDataFilename('images/simulationNumber.txt')
-    directory = 'images/simulation_' + number
-    os.mkdir(directory)  
-    textFiles.createFileOneDataFilename('images/simulationNumber.txt',int(number)+1)
-    textFiles.makeTabDelimitedFileTwoData(directory+'_info',['brownian Motion','video Length','number Of Steps','frame Rate',' frame Size in X','frame Size in Y','pixel Size','Number of Particles','particle Radius','Z cut off','Z frame view one side','fluid Viscoscity','Temperature','diffusion coeff'],['',str(videoLength),str(numSteps),str(frameRate),str(xFrameSize),str(yFrameSize),str(computerPixelSize),str(numParticles),str(sphereRadius),str(zFrameOneSide),str(zFrameViewOneSize),str(fluidViscosity),str(temp),str(RandomWalkSimulator.diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius))],'','')
-    simulationCode.simulatorParticleByParticleList(frameRate,particleSize,xFrameSize,yFrameSize,zFrameOneSide,totCoords,numSteps,directory,zFrameViewOneSize)
+
+directory = 'images\dissertationVideos2\eColiTumble1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumble2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
 
 
-swarmingGeneration()
+directory = 'images\dissertationVideos2\eColiTumble3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) """ 
+
+#finite tumbles, box size visable - 64 visable
+
+""" zViewSize = 64
+zCutoffView = zViewSize/2
+probTumble = 1/(frameRate*avgRunTime)
+tumbleTime = 0.14 #in seconds
+runVelocity = 1.42e-05# in m/s 
+
+
+directory = 'images\dissertationVideos2\eColiTumble64View1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumble64View2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumble64View3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+ """
+
+
+#finite tumbles, box size visable - 288 visable
+""" 
+zViewSize = 288
+zCutoffView = zViewSize/2
+
+directory = 'images\dissertationVideos2\eColiTumble288View1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumble288View2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumble288View3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) """
+#ADD EXPANSION BACK IN!!!!!!!!!!!!!!!!!!!!!!
+
+#run with finite tumbles - 512 visable- expansion
+
+zViewSize = 512
+zCutoffView = zViewSize/2
+probTumble = 1/(frameRate*avgRunTime)
+tumbleTime = 0.14 #in seconds
+runVelocity = 1.42e-05# in m/s 
+
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView512_1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView512_2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView512_3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength) 
+
+#finite tumbles, box size visable - 64 visable - expansion
+
+zViewSize = 64
+zCutoffView = zViewSize/2
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView64_1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView64_2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView64_3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+#finite tumbles, box size visable - 288 visable - expansion
+
+zViewSize = 288
+zCutoffView = zViewSize/2
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView288_1' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView288_2' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
+
+directory = 'images\dissertationVideos2\eColiTumbleExpansionView288_3' 
+os.mkdir(directory)
+runAndTumble.runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,runVelocity,probTumble,tumbleTime,tumbleAngle,avgRunTime,sphereRadius,videoLength)
