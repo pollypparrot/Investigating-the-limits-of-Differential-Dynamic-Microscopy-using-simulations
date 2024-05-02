@@ -144,7 +144,7 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
                 if tumbleStartCheck(probTumble)==1:
                     
                     #state that a tumble is now occuring
-                    tumbling[particleIndex] = 0
+                    tumbling[particleIndex] = 1
                     
                     #update the time tracker
                     tumblingTotalTimes[particleIndex] =  timePeriod
@@ -205,7 +205,7 @@ def runandTumbleCoordinates(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolu
                 yCoordinate = coords[particleIndex][1]
                 
                 apparentZParticleSize = (0.266*abs(zCoordinate)+particleSize)/3
-            
+                
                 #calculate a box around the GAUSSIAN splodge as all relevant informaion is within it
                 #standard deviation is the apparent particle size
                 subtraction = 3*apparentZParticleSize

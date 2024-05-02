@@ -11,17 +11,8 @@ import matplotlib.pyplot as plt
 #global constants
 kb = 1.380649 * 10**(-23)        #Botlzmanns Constant. Unit of Joules per unit Kelvin.
 
-
-#calculate the diffusion coefficient
-def diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius):
-    #diffusionCoeff = (kb*temp)/(6*math.pi*fluidViscosity*sphereRadius) #unit of metres squared per second
-    diffusionCoeff = 6.2e-12
-    return diffusionCoeff
-
-
-
 #create function for random walk simulator
-def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,fluidViscosity,sphereRadius,temp):
+def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCutoffVolume,zCutoffView,computerPixelSize,numParticles,particleSize,directory,diffusionCoeff):
     
     #initialise variables for simulation time
     #initilase pixel array   
@@ -30,7 +21,7 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
     #calculate time period
     timePeriod = 1/frameRate
      
-    #initialise coordinate list, direction list, tumbling list and tumblingTime list
+    #initialise coordinate list
     coords = np.zeros((numParticles,3))
     #for each particle
     for index in range(0,numParticles):
@@ -39,8 +30,6 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
         coords[index][1]=np.random.randint(0,yFrameSize)
         coords[index][2]=np.random.randint(-zCutoffVolume,zCutoffVolume)
     
-    #calculating the Diffusion Coefficient
-    diffusionCoeff = diffusionCoeffCaclculator(temp,fluidViscosity,sphereRadius)   #unit of metres squared per second
 
     #initialising the parameters of the Gaussian distribution for position change
     #As it is the change in position, mean is 0
@@ -124,12 +113,10 @@ def randomWalkCoordinateGeneration(numSteps,frameRate,xFrameSize,yFrameSize,zCut
                         y = y%yFrameSize
                         
                         #add in the change of colour for the splodge at that point
-                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))/1.5
+                        colourArray[x][y] += (1-(zCoordinate/zCutoffView)**2)*(255*math.exp(-((x-xCoordinate)**2+(y-yCoordinate)**2)/(2*apparentZParticleSize**2)))
         
         #once all particle contributions are calculated
         
         #plot colours and save the file in images        
-        plt.imshow(colourArray,cmap='gray',interpolation='none', vmin=0,vmax = 255)
-        plt.axis('off')
         filename = directory+f'/{step}.png'
-        plt.savefig(filename,bbox_inches='tight', pad_inches=0)
+        plt.imsave(fname=filename,arr=colourArray,cmap = 'gray',format = 'png',vmin = 0, vmax = 255)
